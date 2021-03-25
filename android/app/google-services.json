@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "553203585790",
+    "project_id": "competition-app-test",
+    "storage_bucket": "competition-app-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553203585790:android:a3ee6f0f6c2e4772a54baf",
+        "android_client_info": {
+          "package_name": "me.kostech.gamie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553203585790-3cdckfok9950d5bbfc07kr3s1b7kkr8n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.kostech.gamie",
+            "certificate_hash": "9243a4f5ee396452a2507b86ab4f6ffd4c4a15b6"
+          }
+        },
+        {
+          "client_id": "553203585790-h7plb6lg6oemedi0srpdq8m0eq36goif.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0aG2R-vvvH67z9q7_BJ--5NTaDkR6Owg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553203585790-h7plb6lg6oemedi0srpdq8m0eq36goif.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
