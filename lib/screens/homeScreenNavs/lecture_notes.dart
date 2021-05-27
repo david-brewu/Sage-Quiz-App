@@ -134,19 +134,26 @@ class BuildReferenceList extends StatelessWidget {
             imagePath,
             scale: 6,
           ),
-          onTap: () {
+          onTap: () async {
+            String path = await loadReference();
+            print(path);
             Navigator.push(
                 context,
                 CupertinoPageRoute(
                     builder: (context) =>
                         reference.fullPath.contains('lecture_videos')
                             ? VideoScreen(
-                                reference: reference,
+                                path: path,
                               )
                             : PDFReader(reference)));
           },
         ),
       ],
     );
+  }
+
+  loadReference() async {
+    String referencePath = await reference.getDownloadURL();
+    return referencePath;
   }
 }

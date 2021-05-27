@@ -70,9 +70,9 @@ class _VideoItemsState extends State<VideoItems> {
 }
 
 class VideoScreen extends StatefulWidget {
-  final Reference reference;
+  final String path;
 
-  VideoScreen({this.reference});
+  VideoScreen({this.path});
 
   @override
   _VideoScreenState createState() => _VideoScreenState();
@@ -90,7 +90,7 @@ class _VideoScreenState extends State<VideoScreen> {
   }
 
   loadURL() async {
-    string = await widget.reference.getDownloadURL();
+    // string = await widget.reference.getDownloadURL();
 
     return string;
   }
@@ -137,8 +137,7 @@ class _VideoScreenState extends State<VideoScreen> {
           ),
           body: Container(
             child: VideoItems(
-              videoPlayerController:
-                  VideoPlayerController.network(loadController()),
+              videoPlayerController: VideoPlayerController.network(widget.path),
               looping: false,
               autoplay: false,
             ),
