@@ -92,6 +92,7 @@ class _EmailEntryState extends State<EmailEntry> {
                         padding: const EdgeInsets.symmetric(horizontal: 30),
                         width: double.infinity,
                         child: Builder(
+                          // ignore: deprecated_member_use
                           builder: (BuildContext context) => FlatButton(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
@@ -129,6 +130,7 @@ class _EmailEntryState extends State<EmailEntry> {
           content:
               new Text("Link to reset password has been sent to your email"),
           actions: <Widget>[
+            // ignore: deprecated_member_use
             new FlatButton(
               child: new Text("Dismiss"),
               onPressed: () {
@@ -158,6 +160,7 @@ class _EmailEntryState extends State<EmailEntry> {
               title: new Text("Error"),
               content: new Text(e.message),
               actions: <Widget>[
+                // ignore: deprecated_member_use
                 new FlatButton(
                   child: new Text("Dismiss"),
                   onPressed: () {

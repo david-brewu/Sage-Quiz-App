@@ -10,17 +10,15 @@ class EmptyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          Lottie.asset(
-            assetPath,
-            repeat: false
-          ),
-          Text(msg,
+        child: Column(
+      children: [
+        Lottie.asset(assetPath, repeat: false),
+        Text(
+          msg,
           style: MEDIUM_DISABLED_TEXT,
-          )
-        ],
-      )
-    );
+          textAlign: TextAlign.center,
+        )
+      ],
+    ));
   }
 }

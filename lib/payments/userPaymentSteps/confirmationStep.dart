@@ -30,10 +30,12 @@ class ConfirmationStep extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Text("Payment Method added successfully!", style:SMALL_DISABLED_TEXT),
+                  child: Text("Payment Method added successfully!",
+                      style: SMALL_DISABLED_TEXT),
                 ),
                 Container(
                   width: double.infinity,
+                  // ignore: deprecated_member_use
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),

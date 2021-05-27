@@ -10,7 +10,6 @@ import '../../Providers/edit_profile_provider.dart';
 
 // ignore: must_be_immutable
 class PersonalInfo extends StatefulWidget {
-
   final GlobalKey<FormState> formKey;
   PersonalInfo({@required this.formKey});
 
@@ -31,14 +30,15 @@ class _PersonalInfoState extends State<PersonalInfo> {
     super.dispose();
   }
 
-  void updateProfileSections()async{
+  void updateProfileSections() async {
     UserAuthProvider userObj = Provider.of<UserAuthProvider>(context);
     userObj.setEmail = _emailController.value.text;
     userObj.setUserName = _emailController.value.text;
   }
-  void _updateInfo()async{
+
+  void _updateInfo() async {
     if (widget.formKey.currentState.validate()) {
-      // TODO: update user here and then show snack thats its done 
+      // TODO: update user here and then show snack thats its done
       Scaffold.of(context).showSnackBar(SnackBar(
         duration: Duration(seconds: 2),
         content: Row(
@@ -74,21 +74,20 @@ class _PersonalInfoState extends State<PersonalInfo> {
   }
 
   void _cancelUpdate() {
-    User user = Provider.of<UserAuthProvider>(context,listen: false).authUser;
+    User user = Provider.of<UserAuthProvider>(context, listen: false).authUser;
     _emailController.text = user.email;
     _phoneController.text = user.phoneNumber;
-    Provider.of<EditProfileProvider>(context,listen: false).edit = false;
+    Provider.of<EditProfileProvider>(context, listen: false).edit = false;
   }
 
   @override
   void initState() {
     super.initState();
-    User user = Provider.of<UserAuthProvider>(context,listen: false).authUser;
+    User user = Provider.of<UserAuthProvider>(context, listen: false).authUser;
     _emailController = TextEditingController(text: user.email);
     _phoneController = TextEditingController(text: user.phoneNumber);
     _addressController = TextEditingController(text: '');
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -113,18 +112,15 @@ class _PersonalInfoState extends State<PersonalInfo> {
                   return null;
                 },
                 style: MEDIUM_DISABLED_TEXT,
-
                 controller: _emailController,
                 enabled: edit.edit,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                    icon: Text(
-                  "EMAIL: ",
-
-                  style: LABEL_TEXT_STYLE,
-                ),
+                  icon: Text(
+                    "EMAIL: ",
+                    style: LABEL_TEXT_STYLE,
+                  ),
                   contentPadding: EdgeInsets.zero,
-
                 ),
               ),
               SizedBox(
@@ -157,9 +153,9 @@ class _PersonalInfoState extends State<PersonalInfo> {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                     icon: Text(
-                      "ADDRESS: ",
-                      style: LABEL_TEXT_STYLE,
-                    )),
+                  "ADDRESS: ",
+                  style: LABEL_TEXT_STYLE,
+                )),
               ),
               SizedBox(
                 height: 20,
@@ -167,6 +163,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
+                  // ignore: deprecated_member_use
                   FlatButton(
                     disabledColor: Colors.green.withOpacity(0.5),
                     color: Colors.green,
@@ -174,6 +171,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                         Text("UPDATE INFO", style: NORMAL_WHITE_BUTTON_LABEL),
                     onPressed: edit.edit != null ? _updateInfo : null,
                   ),
+                  // ignore: deprecated_member_use
                   FlatButton(
                     disabledColor: Colors.red.withOpacity(0.5),
                     color: Colors.red,

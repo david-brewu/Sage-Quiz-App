@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // APPLICATION LEVEL CONSTANTS
-const String APP_NAME = "Topple App";
+const String APP_NAME = "Sage App";
 const String APP_SLOGAN = "Learn. Excel. Earn";
 const String USER_PROFILE_PIC = "assets/images/default_user_avatar.png";
 const DEFAULT_USER_AVATAR = "assets/images/default_user_avatar.png";

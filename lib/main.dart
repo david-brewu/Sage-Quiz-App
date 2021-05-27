@@ -16,9 +16,11 @@ import './Providers/network_provider.dart';
 import './Providers/edit_profile_provider.dart';
 import 'package:simple_connectivity/simple_connectivity.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   var con = await Connectivity().checkConnectivity();
   bool status = false;
   if (con == ConnectivityResult.mobile || con == ConnectivityResult.wifi) {

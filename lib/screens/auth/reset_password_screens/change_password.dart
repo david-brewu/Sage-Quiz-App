@@ -120,6 +120,7 @@ class ChangePassword extends StatelessWidget {
                           Builder(
                             builder: (BuildContext context) => Container(
                               width: double.infinity,
+                              // ignore: deprecated_member_use
                               child: FlatButton(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20)),

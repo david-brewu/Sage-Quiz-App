@@ -310,8 +310,8 @@ class CustomRoundedButton extends StatelessWidget {
       this.icon,
       this.radius,
       this.text,
-        this.textSize,
-        this.height,
+      this.textSize,
+      this.height,
       this.color})
       : super(key: key);
   @override
@@ -319,6 +319,7 @@ class CustomRoundedButton extends StatelessWidget {
     return Container(
       height: height,
       width: double.infinity,
+      // ignore: deprecated_member_use
       child: (FlatButton(
         onPressed: onTap,
         child: Row(
@@ -350,7 +351,7 @@ class CustomRoundedButton extends StatelessWidget {
                   color: textColor,
                   fontFamily: "Raleway",
                   fontWeight: FontWeight.bold,
-                  fontSize: textSize!=null? textSize : 18),
+                  fontSize: textSize != null ? textSize : 18),
             ),
           ],
         ),
@@ -427,36 +428,37 @@ class CustomOutlinedButton extends StatelessWidget {
       this.buttonHeight,
       this.image,
       this.icon,
-        this.text,
-        this.onPressed,
+      this.text,
+      this.onPressed,
       this.iconColor = Colors.black,
       this.borderColor = Colors.black,
       this.borderHighlightColor = Colors.black})
       : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: buttonWidth,
-      height: buttonHeight,
-      child: OutlineButton(
-        onPressed: onPressed,
+        width: buttonWidth,
+        height: buttonHeight,
+        child: OutlineButton(
+          onPressed: onPressed,
           borderSide: BorderSide(color: borderColor),
           highlightedBorderColor: borderHighlightColor,
-          child: icon == null && text != null ? Text(text) : icon == null && text == null ?
-          (Container(
-                  height: imageSize,
-                  child: Image.asset(image, fit: BoxFit.cover))): Container(
-                  child: Icon(
-                  icon,
-                  color: iconColor,
-                )),
+          child: icon == null && text != null
+              ? Text(text)
+              : icon == null && text == null
+                  ? (Container(
+                      height: imageSize,
+                      child: Image.asset(image, fit: BoxFit.cover)))
+                  : Container(
+                      child: Icon(
+                      icon,
+                      color: iconColor,
+                    )),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderRadius),),
-
-    ));
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
+        ));
   }
 }
 
@@ -570,8 +572,6 @@ class _EducationLevelSelectionState extends State<EducationLevelSelection> {
         children: educationLevels.map((e) => Text(e)).toList());
   }
 }
-
-
 
 //created a new screen for terms and conditions
 // class Terms extends StatefulWidget {

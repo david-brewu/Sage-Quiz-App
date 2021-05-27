@@ -8,7 +8,6 @@ import 'package:gamie/payments/userPaymentSteps/paymentTypes/paymentTypes.dart';
 import 'package:gamie/reuseable/components.dart';
 import 'package:provider/provider.dart';
 
-
 class CreditCardScreen extends StatefulWidget {
   const CreditCardScreen({Key key, this.nextStep, this.previousStep})
       : super(key: key);
@@ -52,22 +51,23 @@ class _CreditCardScreenState extends State<CreditCardScreen> {
       "paymentType": PaymentType.CREDIT_CARD.toString(),
       "number": _number.text,
       "name": _name.text,
-      "userId": Provider.of<UserAuthProvider>(context, listen: false).authUser.uid,
+      "userId":
+          Provider.of<UserAuthProvider>(context, listen: false).authUser.uid,
       "expiry": date.toIso8601String(),
     };
 
-    addData("cards", data).then((value) =>
-    {
-      //then navigate to next stp
-      widget.nextStep()
-    }
-    ).catchError((onError) =>
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text("There was an error"), duration: Duration(seconds: 3),),)
-    );
+    addData("cards", data)
+        .then((value) => {
+              //then navigate to next stp
+              widget.nextStep()
+            })
+        .catchError((onError) => Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text("There was an error"),
+                duration: Duration(seconds: 3),
+              ),
+            ));
   }
-
-
-
 
   TextEditingController _number = TextEditingController();
   TextEditingController _name = TextEditingController();
@@ -107,7 +107,8 @@ class _CreditCardScreenState extends State<CreditCardScreen> {
                         controller: _number,
                         style: INPUT_TEXT_STYLE,
                         validator: (value) {
-                          Map<String, dynamic> cardData = CreditCardValidator.getCard(value);
+                          Map<String, dynamic> cardData =
+                              CreditCardValidator.getCard(value);
                           print(cardData);
                           if (!cardData[CreditCardValidator.isValidCard]) {
                             return "Your card number is invalid";
@@ -167,6 +168,7 @@ class _CreditCardScreenState extends State<CreditCardScreen> {
                               style: LABEL_TEXT_STYLE_MEDIUM,
                             ),
                             Builder(
+                                // ignore: deprecated_member_use
                                 builder: (context) => FlatButton(
                                     color: Colors.black,
                                     shape: RoundedRectangleBorder(
@@ -223,7 +225,6 @@ class _CreditCardScreenState extends State<CreditCardScreen> {
                       ),
                     ),
                     SizedBox(height: 10),
-
                     SizedBox(
                       height: 20,
                     ),
@@ -232,6 +233,7 @@ class _CreditCardScreenState extends State<CreditCardScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    // ignore: deprecated_member_use
                     FlatButton(
                       color: Colors.red,
                       shape: RoundedRectangleBorder(
@@ -243,6 +245,7 @@ class _CreditCardScreenState extends State<CreditCardScreen> {
                       ),
                     ),
                     Builder(
+                        // ignore: deprecated_member_use
                         builder: (context) => FlatButton(
                               color: Colors.green,
                               shape: RoundedRectangleBorder(

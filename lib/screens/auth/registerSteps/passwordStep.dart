@@ -18,7 +18,7 @@ class _PasswordStepState extends State<PasswordStep> {
   String password;
   Map<String, dynamic> data;
 
-  Future getPrefInScope(prefs)async{
+  Future getPrefInScope(prefs) async {
     var record = await jsonDecode(prefs.getString(PREFS_PERSONAL_INFO));
     setState(() {
       data = record;

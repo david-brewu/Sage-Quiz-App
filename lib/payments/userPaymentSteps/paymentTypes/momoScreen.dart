@@ -45,22 +45,23 @@ class _MomoScreenState extends State<MomoScreen> {
   void _add_data_then_proceed(BuildContext context) {
     //add data
     Map<String, String> data = {
-        "paymentType": "MOMO",
-        "number": "${_number.text}",
-        "name": _name.text,
-        "provider": _currentProvider,
-        "userId": Provider.of<UserAuthProvider>(context, listen: false).authUser.uid,
-        };
-    addData("cards", data).then((value) => widget.nextStep()).catchError((onError) =>{
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text("There was and error"),
-          duration: Duration(seconds: 3),
-
-        ))
-    });
+      "paymentType": "MOMO",
+      "number": "${_number.text}",
+      "name": _name.text,
+      "provider": _currentProvider,
+      "userId":
+          Provider.of<UserAuthProvider>(context, listen: false).authUser.uid,
+    };
+    addData("cards", data)
+        .then((value) => widget.nextStep())
+        .catchError((onError) => {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("There was and error"),
+                duration: Duration(seconds: 3),
+              ))
+            });
 
     //proceed
-
   }
 
   TextEditingController _number = TextEditingController();
@@ -134,9 +135,9 @@ class _MomoScreenState extends State<MomoScreen> {
                 height: 60,
                 child: TextFormField(
                   controller: _number,
-
                   validator: (value) {
-                    if (value.length != 10 || !Validator.isNumber(value, allowSymbols: false)) {
+                    if (value.length != 10 ||
+                        !Validator.isNumber(value, allowSymbols: false)) {
                       return "Enter a 10-digit phone number";
                     }
                     return null;
@@ -177,7 +178,6 @@ class _MomoScreenState extends State<MomoScreen> {
               SizedBox(
                 height: 20,
               ),
-
             ],
           ),
         ),
@@ -187,6 +187,7 @@ class _MomoScreenState extends State<MomoScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
+            // ignore: deprecated_member_use
             FlatButton(
               color: Colors.red,
               shape: RoundedRectangleBorder(
@@ -198,6 +199,7 @@ class _MomoScreenState extends State<MomoScreen> {
               ),
             ),
             Builder(
+              // ignore: deprecated_member_use
               builder: (context) => FlatButton(
                 color: Colors.green,
                 shape: RoundedRectangleBorder(

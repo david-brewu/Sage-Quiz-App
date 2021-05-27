@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamie/config/config.dart';
 
-
 class InviteScreen extends StatefulWidget {
   static String routeName = "invite_screen";
   @override
@@ -13,41 +12,39 @@ class _InviteScreenState extends State<InviteScreen> {
   bool inviteSent = false;
   String img = "assets/images/invite-img.png";
 
-
-
   @override
   void initState() {
     super.initState();
   }
 
-  _sendInvitation(){
+  _sendInvitation() {
 //    ADD THE EMAIL TO INVITE COLLECTION
-  return false;
+    return false;
   }
 
-
-  void _invite(BuildContext context) async{
+  void _invite(BuildContext context) async {
     // print(_emailForm.currentState);
     // return;
     if (_emailForm.currentState.validate()) {
-      if(!inviteSent){ // hasen't sent invite
-          bool sent = _sendInvitation();
+      if (!inviteSent) {
+        // hasen't sent invite
+        bool sent = _sendInvitation();
         if (sent) {
           Scaffold.of(context).showSnackBar(SnackBar(
-          content: Row(
-            children: <Widget>[
-              Icon(
-                Icons.check_circle_outline,
-                color: Colors.green,
-              ),
-              SizedBox(width: 5),
-              Text("Invite sent!")
-            ],
-          ),
-          duration: Duration(milliseconds: 500),
-        ));
+            content: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.check_circle_outline,
+                  color: Colors.green,
+                ),
+                SizedBox(width: 5),
+                Text("Invite sent!")
+              ],
+            ),
+            duration: Duration(milliseconds: 500),
+          ));
           return;
-        }else{
+        } else {
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Row(
               children: <Widget>[
@@ -62,7 +59,7 @@ class _InviteScreenState extends State<InviteScreen> {
             duration: Duration(milliseconds: 500),
           ));
         }
-      }else{
+      } else {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Row(
             children: <Widget>[
@@ -76,7 +73,6 @@ class _InviteScreenState extends State<InviteScreen> {
           ),
           duration: Duration(milliseconds: 1500),
         ));
-
       }
 
       //Navigate to next screen
@@ -108,7 +104,11 @@ class _InviteScreenState extends State<InviteScreen> {
     final Size DEVSIZE = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: () {Navigator.pop(context);}),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
         backgroundColor: APP_BAR_COLOR,
         title: Text("Invite a friend"),
       ),
@@ -137,14 +137,15 @@ class _InviteScreenState extends State<InviteScreen> {
                       return "enter a valid email address";
                     },
                     // controller: _emailController,
-                    decoration: InputDecoration(hintText: "Enter your friends email address"),
+                    decoration: InputDecoration(
+                        hintText: "Enter your friends email address"),
                   ),
                 ),
               ),
               Builder(
+                  // ignore: deprecated_member_use
                   builder: (context) => FlatButton(
                       color: APP_BAR_COLOR,
-
                       onPressed: () => _invite(context),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

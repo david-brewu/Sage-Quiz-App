@@ -43,6 +43,18 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         errorMessage = "Please input valid email and password";
       });
+    } else if (email.isEmpty && !validPassword) {
+      setState(() {
+        errorMessage = "Please input valid email and password";
+      });
+    } else if (!validEmail && email.isEmpty) {
+      setState(() {
+        errorMessage = "Please input valid email and password";
+      });
+    } else if (email.isEmpty && pass.isEmpty) {
+      setState(() {
+        errorMessage = "Please input valid email and password";
+      });
     }
     setState(() {
       isBusy = true;
@@ -71,6 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 content: new Text(
                     'Verification email has been sent to your email address. Kindly verify your email and login again'),
                 actions: <Widget>[
+                  // ignore: deprecated_member_use
                   new FlatButton(
                     child: new Text("Dismiss"),
                     onPressed: () {
@@ -94,8 +107,11 @@ class _LoginScreenState extends State<LoginScreen> {
           // return object of type Dialog
           return AlertDialog(
             title: new Text("Error"),
-            content: new Text(e.message),
+            content: new Text(e.message == 'Given String is empty or null'
+                ? 'email or password cannot be empty'
+                : e.message),
             actions: <Widget>[
+              // ignore: deprecated_member_use
               new FlatButton(
                 child: new Text("Dismiss"),
                 onPressed: () {
@@ -119,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
             title: new Text('Want to exit?'),
             content: new Text('Do you want to exit the App'),
             actions: <Widget>[
+              // ignore: deprecated_member_use
               FlatButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: Text(
@@ -129,6 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * .2,
               ),
+              // ignore: deprecated_member_use
               FlatButton(
                 onPressed: () => SystemNavigator.pop(),
                 child: Text(
@@ -250,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Container(
                               height: widgetHeight,
                               width: widgetWidth,
-                              child: TextField(
+                              child: TextFormField(
                                   textAlign: TextAlign.center,
                                   keyboardType: TextInputType.emailAddress,
                                   autocorrect: false,
@@ -277,7 +295,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Container(
                               height: widgetHeight,
                               width: widgetWidth,
-                              child: TextField(
+                              child: TextFormField(
                                 obscureText: true,
                                 obscuringCharacter: "*",
                                 textAlign: TextAlign.center,
@@ -406,6 +424,7 @@ class RoundedButtonWithColor extends StatelessWidget {
       child: Container(
         width: width,
         height: height,
+        // ignore: deprecated_member_use
         child: FlatButton(
           color: backgroundColor != null
               ? backgroundColor

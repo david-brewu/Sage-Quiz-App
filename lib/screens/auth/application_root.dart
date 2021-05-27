@@ -15,19 +15,19 @@ class ApplicationRoot extends StatelessWidget {
 }
 
 class UserAuthStateWatch extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
-    UserAuthProvider userAuthData = Provider.of<UserAuthProvider>(context, listen: false);
-    return Builder(
-      builder: (BuildContext context,){
-          return userAuthData.authUser != null ? HomeScreen() : GettingStartedScreen();
-        }
-    );
+    UserAuthProvider userAuthData =
+        Provider.of<UserAuthProvider>(context, listen: false);
+    return Builder(builder: (
+      BuildContext context,
+    ) {
+      return userAuthData.authUser != null
+          ? HomeScreen()
+          : GettingStartedScreen();
+    });
   }
 }
-
 
 class InitializeApp extends StatelessWidget {
   // Create the initialization Future outside of `build`:
@@ -42,8 +42,8 @@ class InitializeApp extends StatelessWidget {
         // Check for errors
         if (snapshot.hasError) {
           return Center(
-            child: Text("Sorry, we couldn't start the app")
-          ); //something went wrong
+              child: Text(
+                  "Sorry, we couldn't start the app")); //something went wrong
         }
 
         // Once complete, show your application
@@ -54,13 +54,17 @@ class InitializeApp extends StatelessWidget {
         // Otherwise, show something whilst waiting for initialization to complete
         return Scaffold(
           body: Center(
-            child: Column(
-              children: [
-                Center(child: Text("Getting you ready...",style: DISABLED_TEXT,),),
-                CircularProgressIndicator()
-              ],
-            )
-        ),
+              child: Column(
+            children: [
+              Center(
+                child: Text(
+                  "Getting you ready...",
+                  style: DISABLED_TEXT,
+                ),
+              ),
+              CircularProgressIndicator()
+            ],
+          )),
         );
       },
     );

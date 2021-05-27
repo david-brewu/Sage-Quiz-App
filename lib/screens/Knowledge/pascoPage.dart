@@ -120,6 +120,7 @@ class _PascoPageState extends State<PascoPage> {
                     width: 100,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                    // ignore: deprecated_member_use
                     child: FlatButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
@@ -161,6 +162,7 @@ class _PascoPageState extends State<PascoPage> {
                     width: 100,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                    // ignore: deprecated_member_use
                     child: FlatButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
@@ -185,15 +187,16 @@ class _PascoPageState extends State<PascoPage> {
       ),
       bottomNavigationBar: Container(
         height: 50,
-        child:  FlatButton(
-                      disabledColor: APP_BAR_COLOR.withOpacity(0.6),
-                      color: APP_BAR_COLOR,
-                      child: Text(
-                        "CHECKOUT QUESTIONS",
-                        style: NORMAL_WHITE_BUTTON_LABEL,
-                      ),
-                      onPressed: _checkOutQuestion,
-                    ),
+        // ignore: deprecated_member_use
+        child: FlatButton(
+          disabledColor: APP_BAR_COLOR.withOpacity(0.6),
+          color: APP_BAR_COLOR,
+          child: Text(
+            "CHECKOUT QUESTIONS",
+            style: NORMAL_WHITE_BUTTON_LABEL,
+          ),
+          onPressed: _checkOutQuestion,
+        ),
       ),
     );
   }

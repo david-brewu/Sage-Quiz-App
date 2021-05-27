@@ -1,8 +1,6 @@
 // ALL COLLECTION NAMES HERE
 const ENROLMENTS = "enrolments";
-const COMPETITIONS = "competitions";
-
-
+const COMPETITIONS = "competitions ";
 
 // ALL DOCUMENT KEYS HERE
 const DOCUMENT_ID = "documentId";

@@ -14,7 +14,6 @@ import '../../reuseable/no_connectivity_widget.dart';
 import '../../reuseable/empty_items.dart';
 import '../../reuseable/network_error_widget.dart';
 
-
 class Competitions extends StatefulWidget {
   @override
   _CompetitionsState createState() => _CompetitionsState();
@@ -24,60 +23,96 @@ class _CompetitionsState extends State<Competitions> {
   @override
   Widget build(BuildContext context) {
     final networkProvider = Provider.of<NetworkProvider>(context);
-    User user = Provider.of<UserAuthProvider>(context).authUser??FirebaseAuth.instance.currentUser;
+    User user = Provider.of<UserAuthProvider>(context).authUser ??
+        FirebaseAuth.instance.currentUser;
     return SafeArea(
-       child: Scaffold(
-         body: 
-          networkProvider.connectionStatus? competionStream(user): Center(child: NoConnectivityWidget())
-       ),
-
+      child: Scaffold(
+          body: networkProvider.connectionStatus
+              ? competionStream(user)
+              : Center(child: NoConnectivityWidget())),
     );
   }
 }
 
-
-Widget competionStream(User user){
+Widget competionStream(User user) {
   var enrolledIds = <String>[];
   return StreamBuilder(
-  stream: CloudFirestoreServices.getEnrolledStream(user),
-  builder: (BuildContext context, AsyncSnapshot snapshot){
-    if(snapshot.connectionState == ConnectionState.waiting)
-      return Scaffold(body: Center(child: CircularProgressIndicator()),);
-    if(snapshot.hasError)
-      return Scaffold(body: Center(child: Text("There was an error", style: DISABLED_TEXT,),),);
-    if(snapshot.hasData){
-      List<DocumentSnapshot> enrolledData = snapshot.data.documents;
-      enrolledData.forEach((element) { 
-        print(element);
-        enrolledIds.add(element.data()["competitionId"]);
-      });
-    }
-    return StreamBuilder(
-  stream: CloudFirestoreServices.getCompetitionStream(),
-  builder: (context, snapshot){
-  if(snapshot.connectionState == ConnectionState.waiting){
-    return Scaffold(body: Center(child: CircularProgressIndicator()),);
-  }else if(snapshot.hasError){
-    return Scaffold(body: Center(child: NetworkErrorWidget(),),);
-  }
-  List<DocumentSnapshot> data = snapshot.data.documents;
-  bool con = data.every((element) => enrolledIds.contains(element.id));
-  if(con) return  Center(child: EmptyWidget(msg: 'There are no upcoming competitions',),);
-  if(data.length == 0) return Center(child: EmptyWidget(msg: 'There are no upcoming competitions',),);
-  return ListView.builder(
-    itemCount: data.length,
-      itemBuilder: (context, index){
-   if(enrolledIds.contains(data[index].id))return Container();
-   return CompetitionCard(CompetitionDataModel.fromMap(data[index],index));
-  } );
-},
-);
-  },
-);}
-
+    stream: CloudFirestoreServices.getEnrolledStream(user),
+    //stream:  FirebaseFirestore.instance.collection('enrolments').snapshots(),
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting)
+        return Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      if (snapshot.hasError)
+        return Scaffold(
+          body: Center(
+            child: Text(
+              "There was an error",
+              style: DISABLED_TEXT,
+            ),
+          ),
+        );
+      if (snapshot.hasData) {
+        List<DocumentSnapshot> enrolledData = snapshot.data.docs;
+        print('enrolled data is');
+        print(enrolledData.length);
+        enrolledData.forEach((element) {
+          print(element);
+          enrolledIds.add(element.data()["competitionId"]);
+        });
+      }
+      return StreamBuilder(
+          stream: CloudFirestoreServices.getCompetitionStream(),
+          //stream: FirebaseFirestore.instance.collection("competitions").snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            } else if (snapshot.hasError) {
+              return Scaffold(
+                body: Center(
+                  child: NetworkErrorWidget(),
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              List<DocumentSnapshot> data = snapshot.data.docs;
+              print(data.length);
+              print(data.toString());
+              bool con =
+                  data.every((element) => enrolledIds.contains(element.id));
+              if (con)
+                return Center(
+                  child: EmptyWidget(
+                    msg:
+                        'There are no competitions available. Please check back later',
+                  ),
+                );
+              if (data.length == 0)
+                return Center(
+                  child: EmptyWidget(
+                    msg:
+                        'There are no competitions available. Please check back later',
+                  ),
+                );
+              return ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    if (enrolledIds.contains(data[index].id))
+                      return Container();
+                    return CompetitionCard(
+                        CompetitionDataModel.fromMap(data[index], index));
+                  });
+            } else
+              return Text('has not data');
+          });
+    },
+  );
+}
 
 class CompetitionCard extends StatelessWidget {
-  
   final CompetitionDataModel dataModel;
   CompetitionCard(this.dataModel);
 
@@ -86,57 +121,86 @@ class CompetitionCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: APP_BAR_COLOR,
-          borderRadius: BorderRadius.all(Radius.circular(10),),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
           //backgroundBlendMode: BlendMode.color,
-        boxShadow: [BoxShadow(color: Colors.blueGrey, blurRadius: 1, spreadRadius: .1),]
-      ),
+          boxShadow: [
+            BoxShadow(color: Colors.blueGrey, blurRadius: 1, spreadRadius: .1),
+          ]),
 
       //color: APP_BAR_COLOR,
       margin: EdgeInsets.symmetric(horizontal: 3, vertical: 1.5),
       padding: EdgeInsets.all(10),
       child: Column(
-
         children: [
-        Text(dataModel.title, style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,),
-        Text(dataModel.formatStart(), style: MEDIUM_DISABLED_TEXT),
-        Text(dataModel.formatEnd(), style: MEDIUM_DISABLED_TEXT,),
-        Text(dataModel.formatDuration(), style: MEDIUM_DISABLED_TEXT,),
-        Text(dataModel.formatPrice(), style: MEDIUM_DISABLED_TEXT,),
-        Container(
-          width: MediaQuery.of(context).size.width*.9,
-          alignment: Alignment.bottomRight,
-          child: FlatButton(
-              onPressed:_enrollUserInCompetition,
-              child: Text("Enroll", style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,)),)
-      ],),
+          Text(
+            dataModel.title,
+            style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,
+          ),
+          Text(dataModel.formatStart(), style: MEDIUM_DISABLED_TEXT),
+          Text(
+            dataModel.formatEnd(),
+            style: MEDIUM_DISABLED_TEXT,
+          ),
+          Text(
+            dataModel.formatDuration(),
+            style: MEDIUM_DISABLED_TEXT,
+          ),
+          Text(
+            dataModel.formatPrice(),
+            style: MEDIUM_DISABLED_TEXT,
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * .9,
+            alignment: Alignment.bottomRight,
+            // ignore: deprecated_member_use
+            child: FlatButton(
+                onPressed: _enrollUserInCompetition,
+                child: Text(
+                  "Enroll",
+                  style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,
+                )),
+          )
+        ],
+      ),
     );
   }
-  _enrollUserInCompetition()async{
+
+  _enrollUserInCompetition() async {
     User user = FirebaseAuth.instance.currentUser;
     Map<String, dynamic> payload = {
       COMPETITION_ID: dataModel.id,
-      COMPETITION_TITLE:dataModel.title,
+      COMPETITION_TITLE: dataModel.title,
       COMPETITION_START: dataModel.start,
       COMPETITION_DURATION: dataModel.duration.inMinutes,
       COMPETITION_END: dataModel.end,
       USER_ID: user.uid,
       "ended": false,
-      "numberOfQuestions":dataModel.documents.length,
+      "numberOfQuestions": dataModel.documents.length,
       USER_NAME: user.displayName,
     };
-    var document = await FirebaseFirestore.instance.collection(ENROLMENTS)
-        .where(COMPETITION_ID, isEqualTo: dataModel.id).where(USER_ID, isEqualTo: user.uid)
-        .limit(1).get();
-    if(document.docs.length == 1) return;
+    var document = await FirebaseFirestore.instance
+        .collection(ENROLMENTS)
+        .where(COMPETITION_ID, isEqualTo: dataModel.id)
+        .where(USER_ID, isEqualTo: user.uid)
+        .limit(1)
+        .get();
+    if (document.docs.length == 1) return;
     // create the doc
-    FirebaseFirestore.instance.collection(ENROLMENTS).add(payload).whenComplete(()async{
+    FirebaseFirestore.instance
+        .collection(ENROLMENTS)
+        .add(payload)
+        .whenComplete(() async {
       competitionQueue.add(dataModel.id);
       // documents.removeAt(index);
       //Trigger firebase reload
-      await FirebaseFirestore.instance.collection(COMPETITIONS).doc(dataModel.id).update({"last_accessed": "${Timestamp.now().millisecondsSinceEpoch}"});
+      await FirebaseFirestore.instance
+          .collection(COMPETITIONS)
+          .doc(dataModel.id)
+          .update(
+              {"last_accessed": "${Timestamp.now().millisecondsSinceEpoch}"});
       print(competitionQueue);
-      }
-      ).catchError((onError)=>null);
-
+    }).catchError((onError) => null);
   }
 }

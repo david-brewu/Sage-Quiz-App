@@ -43,7 +43,7 @@ dependencies:
   the_validator: ^1.0.1
   cached_network_image: ^2.3.2+1
   intl: ^0.16.1
-  firebase_core: "^0.5.0"
+  firebase_core: 
   firebase_auth: "^0.18.0+1"
   google_sign_in: "^4.5.4"
   cloud_firestore: "^0.14.0+2"
@@ -56,6 +56,13 @@ dependencies:
   lottie: ^0.7.0+1
   sqflite:
   path_provider:
+  timer_count_down:
+  double_back_to_close_app:
+  advance_pdf_viewer:
+  firebase_storage:
+  dio:
+  chewie:
+  video_player:
   
 
 
@@ -84,6 +91,8 @@ flutter:
   assets:
     - assets/images/
     - assets/lottie_animations/
+    - assets/books/dsd.pdf
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

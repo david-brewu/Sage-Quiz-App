@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamie/config/config.dart';
@@ -40,7 +39,11 @@ class _ProceedToPaymentState extends State<ProceedToPayment> {
   void _onProceed(BuildContext context) {
     if (_formKey.currentState.validate()) {
       //process payment
-      Navigator.of(context).push(CupertinoPageRoute(builder: (context) => RaveRequest.momo(amount: _amount.text,phone_number: widget.item.number, network: widget.item.provider)));
+      Navigator.of(context).push(CupertinoPageRoute(
+          builder: (context) => RaveRequest.momo(
+              amount: _amount.text,
+              phone_number: widget.item.number,
+              network: widget.item.provider)));
       return;
     }
     Scaffold.of(context).showSnackBar(SnackBar(
@@ -85,6 +88,7 @@ class _ProceedToPaymentState extends State<ProceedToPayment> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Container(
               width: double.infinity,
+              // ignore: deprecated_member_use
               child: FlatButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
@@ -172,11 +176,13 @@ class _ProceedToPaymentState extends State<ProceedToPayment> {
                           builder: (BuildContext context) => TextFormField(
                             onFieldSubmitted: (String term) =>
                                 _onProceed(context),
-                            validator: (
-                                String value) {
-                                print(_amount.text);
-                                var val = _amount.text;
-                              if ( val == null || !Validator.isNumber(val) || double.tryParse(val) == null || double.tryParse(val) < 1) {
+                            validator: (String value) {
+                              print(_amount.text);
+                              var val = _amount.text;
+                              if (val == null ||
+                                  !Validator.isNumber(val) ||
+                                  double.tryParse(val) == null ||
+                                  double.tryParse(val) < 1) {
                                 return "Please enter a valid amount";
                               }
                               return null;
@@ -194,6 +200,7 @@ class _ProceedToPaymentState extends State<ProceedToPayment> {
                     Builder(
                       builder: (BuildContext context) => Container(
                           width: double.infinity,
+                          // ignore: deprecated_member_use
                           child: FlatButton(
                               color: Colors.green,
                               shape: RoundedRectangleBorder(

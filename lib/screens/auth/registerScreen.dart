@@ -195,6 +195,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               content: new Text(
                   'Verification email has been sent to your email. Kindly verify your email address and login into your new account'),
               actions: <Widget>[
+                // ignore: deprecated_member_use
                 new FlatButton(
                   child: new Text("Dismiss"),
                   onPressed: () {
@@ -250,6 +251,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           _currentStep != 0
+              // ignore: deprecated_member_use
               ? FlatButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15)),
@@ -261,6 +263,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: 3,
                   height: 3,
                 ),
+          // ignore: deprecated_member_use
           FlatButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),

@@ -2,12 +2,90 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:gamie/config/config.dart';
 import 'package:gamie/screens/competition/competitionScoreScreen.dart';
 import '../../models/competition_data_model.dart';
+import '../../services/cloud_firestore_services.dart';
+import 'package:gamie/screens/homeScreen.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
+class CompetitionScreen1 extends StatelessWidget {
+  final CompetitionDataModel dataModel;
+  final User user;
+
+  CompetitionScreen1(
+    this.dataModel,
+    this.user,
+  );
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          dataModel.title,
+          style: APP_BAR_TEXTSTYLE,
+        ),
+        backgroundColor: APP_BAR_COLOR,
+        bottom: PreferredSize(
+            child: Container(
+                child: CountdownTimer(
+              controller: CountdownTimerController(
+                onEnd: () => __compScreenState.routeMe(), //routeMe(),
+                endTime: DateTime.now()
+                    .add(Duration(minutes: dataModel.duration.inMinutes))
+                    .millisecondsSinceEpoch,
+              ),
+              widgetBuilder: (_, time) => Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      "Time left",
+                      style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                            "${time == null || time.min == null ? '0' : time.min}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                                color: time == null ||
+                                        time.min == null ||
+                                        time.min < 5
+                                    ? Colors.red
+                                    : Colors.white,
+                                fontFamily: "Montserrat")),
+                        Text(":", style: MEDIUM_WHITE_BUTTON_TEXT_BOLD),
+                        Text(
+                            "${time == null || time.sec == null ? '0' : time.sec}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                                color: time == null ||
+                                        time.min == null ||
+                                        time.min < 5
+                                    ? Colors.red
+                                    : Colors.white,
+                                fontFamily: "Montserrat")),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            )),
+            preferredSize: Size(MediaQuery.of(context).size.width, 50)),
+      ),
+      body: CompetitionScreen(dataModel: dataModel, user: user),
+    );
+  }
+}
+
+_CompetitionScreenState __compScreenState;
 
 class CompetitionScreen extends StatefulWidget {
   final User user;
@@ -15,15 +93,20 @@ class CompetitionScreen extends StatefulWidget {
 
   CompetitionScreen({this.dataModel, this.user});
 
-
   @override
-  _CompetitionScreenState createState() => _CompetitionScreenState();
+  //_CompetitionScreenState createState() => _CompetitionScreenState();
+  _CompetitionScreenState createState() {
+    __compScreenState = _CompetitionScreenState();
+    return __compScreenState;
+  }
 }
+
+int min = 0;
+int sec = 0;
+
 class _CompetitionScreenState extends State<CompetitionScreen> {
   int _current = 0;
   int startTime = Timestamp.now().millisecondsSinceEpoch;
-
-
 
   // ignore: unused_element
   _showDialog() async {
@@ -33,8 +116,10 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
         builder: (context) => AlertDialog(
               title: Text("Are you sure you want to submit?"),
               actions: <Widget>[
-                FlatButton(
-                    onPressed: _navigateToCompetitionScore, child: Text("Yes")),
+                // ignore: deprecated_member_use
+                FlatButton(onPressed: _popReplaceScore, child: Text("Yes")),
+                Text('                                  '),
+                // ignore: deprecated_member_use
                 FlatButton(
                   onPressed: () => Navigator.pop(context),
                   child: Text("No"),
@@ -43,44 +128,102 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
             ));
   }
 
+  void _popReplaceHome() {
+    Navigator.of(context).pop();
+    Navigator.of(context).pushReplacement(
+        CupertinoPageRoute(builder: (context) => HomeScreen()));
+  }
+
+  void _popReplaceScore() {
+    Navigator.of(context).pop();
+    _navigateToCompetitionScore();
+  }
+
+  _onWillPop() async {
+    return showDialog(
+        context: context,
+        // child: Container(),
+        builder: (context) => AlertDialog(
+              title: Text(
+                  "Your data will not be saved when you exit. Do you still want to exit?"),
+              actions: <Widget>[
+                // ignore: deprecated_member_use
+                FlatButton(
+                    onPressed: () => _popReplaceHome(), child: Text("Yes")),
+                Text('                                  '),
+                // ignore: deprecated_member_use
+                FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("No"),
+                )
+              ],
+            ));
+  }
 
   List<String> _letters = ["A", "B", "C", "D"];
-  List<int> scores = [for(var i=0; i<60; i+=1) 0];
+  List<int> trackPrevious = [for (var i = 0; i < 60; i += 1) 10];
+
+  List<int> scores = [for (var i = 0; i < 60; i += 1) 0];
   void resetUserAnswer() {
     for (int i = 0; i < checked.length; i++) {
       checked[i] = false;
     }
   }
 
+  int _stream() {
+    int duuu;
+    StreamBuilder(
+        stream:
+            CloudFirestoreServices.getCompetitionStream2(widget.dataModel.id),
+        builder: (
+          context,
+          snapshot,
+        ) {
+          List<DocumentSnapshot> needed = snapshot.data.docuements;
+          if (needed != null) {
+            try {
+              var b = CompetitionDataModel.fromMap(needed[0], 0);
+              int duuu = DateTime.now()
+                  .add(Duration(minutes: b.duration.inMinutes))
+                  .millisecondsSinceEpoch;
+              print('myduu is');
+              print(duuu);
+            } catch (e) {
+              return null;
+            }
+          } else {
+            print('I found nothing');
+          }
+        });
+    return duuu;
+  }
+
   void onTapped(String e, String answer) {
-      List alternatives = widget.dataModel.documents[_current]["alternatives"];
-      int idx = alternatives.indexOf(e);
-      String chosen = _letters[idx];
-      bool equal = chosen.toUpperCase()==answer.toUpperCase();
-      scores[_current] = equal?1:0;
-    if (e ==widget.dataModel.documents[_current]
-            ["alternatives"][0]) {
+    List alternatives = widget.dataModel.documents[_current]["alternatives"];
+    int idx = alternatives.indexOf(e);
+    print(idx);
+
+    bool equal = widget.dataModel.documents[_current]["alternatives"][idx]
+            .toUpperCase() ==
+        answer.toUpperCase();
+    scores[_current] = equal ? 1 : 0;
+    trackPrevious[_current] = idx;
+    if (e == widget.dataModel.documents[_current]["alternatives"][0]) {
       setState(() {
         resetUserAnswer();
         checked[0] = true;
       });
-    } else if (e ==
-        widget.dataModel.documents[_current]
-            ["alternatives"][1]) {
+    } else if (e == widget.dataModel.documents[_current]["alternatives"][1]) {
       setState(() {
         resetUserAnswer();
         checked[1] = true;
       });
-    } else if (e ==
-        widget.dataModel.documents[_current]
-            ["alternatives"][2]) {
+    } else if (e == widget.dataModel.documents[_current]["alternatives"][2]) {
       setState(() {
         resetUserAnswer();
         checked[2] = true;
       });
-    } else if (e ==
-        widget.dataModel.documents[_current]
-            ["alternatives"][3]) {
+    } else if (e == widget.dataModel.documents[_current]["alternatives"][3]) {
       setState(() {
         resetUserAnswer();
         checked[3] = true;
@@ -91,8 +234,9 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
   List<bool> checked = [false, false, false, false];
 
   bool endOfQuestion = false;
-  void _navigateToCompetitionScore() async{
-    double score = scores.reduce((value, element) => value+element).toDouble();
+  _navigateToCompetitionScore() async {
+    double score =
+        scores.reduce((value, element) => value + element).toDouble();
     int timeNow = Timestamp.now().millisecondsSinceEpoch;
     int totalTime = timeNow - startTime;
     Map<String, dynamic> data = {
@@ -101,24 +245,35 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
       "dateTaken": DateTime.now(),
       "time": totalTime,
       "startTime": startTime,
-      "endTime": startTime+totalTime,
+      "endTime": startTime + totalTime,
       "score": score,
       "documents": widget.dataModel.documents,
       "userId": widget.user.uid,
       "userName": widget.user.displayName,
+      "userResponse": trackPrevious,
+      "comEnd": widget.dataModel.end,
     };
-    
+
     await FirebaseFirestore.instance.collection("results").add(data);
 
-    Navigator.pushReplacement(context,
-        CupertinoPageRoute(builder: (context) => CompetitionScoreScreen(score,widget.dataModel)));
+    Navigator.pushReplacement(
+        context,
+        CupertinoPageRoute(
+            builder: (context) =>
+                CompetitionScoreScreen(score, widget.dataModel)));
   }
+
+  void routeMe() {
+    _navigateToCompetitionScore();
+  }
+
   void _onNextTapped() {
+    print(trackPrevious);
+    print(scores);
     //endOfQuestion ? _showDialog() : null;
 
-
     if (_current == widget.dataModel.documents.length - 1) {
-      _navigateToCompetitionScore();
+      _showDialog();
       setState(() {
         endOfQuestion = true;
       });
@@ -127,62 +282,117 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
     setState(() {
       _current++;
       resetUserAnswer();
+      if (trackPrevious[_current] < 10) checked[trackPrevious[_current]] = true;
     });
   }
 
   void _onPreviousTapped() {
+    resetUserAnswer();
     if (_current == 0) {
       return;
     }
     setState(() {
       _current--;
+      if (trackPrevious[_current] < 10) checked[trackPrevious[_current]] = true;
+
       endOfQuestion = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    String competitionTitle = widget.dataModel.title;
     int duration = widget.dataModel.duration.inMinutes;
-    int questionNumber = _current+1;
+    int questionNumber = _current + 1;
     int _alt = 0;
     var alternatives = widget.dataModel.documents[_current]["alternatives"];
     var question = widget.dataModel.documents[_current]["question"];
     String answer = widget.dataModel.documents[_current]["answer"];
     final Size deviceSize = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          competitionTitle,
-          style: APP_BAR_TEXTSTYLE,
-        ),
-        backgroundColor: APP_BAR_COLOR,
-        bottom: PreferredSize(
-            child: Container(
-              child: CountdownTimer(
-                endTime: DateTime.now().add(Duration(minutes: duration)).millisecondsSinceEpoch,
-                widgetBuilder: (_, time)=>
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text("Time left", style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,),
-                          Row(
-                            children: [
-                              Text("${time.min}", style: MEDIUM_WHITE_BUTTON_TEXT_BOLD),
-                              Text(":", style: MEDIUM_WHITE_BUTTON_TEXT_BOLD),
-                              Text("${time.sec}", style: MEDIUM_WHITE_BUTTON_TEXT_BOLD),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-              )
+    return WillPopScope(
+      onWillPop: () => _onWillPop(),
+      child:
+          /* Scaffold(
+          //appBar: myAppBar(),
+
+          appBar: AppBar(
+            title: Text(
+              widget.dataModel.title,
+              style: APP_BAR_TEXTSTYLE,
             ),
-            preferredSize: Size(deviceSize.width, 50)),
-      ),
-      body: Container(
+            backgroundColor: APP_BAR_COLOR,
+            bottom: PreferredSize(
+                child: Container(
+                  child: Countdown(
+                    onFinished: () => routeMe(),
+                    seconds: duration * 60,
+                    // endTime: DateTime.now()
+                    //     .add(Duration(minutes: duration))
+                    //     .millisecondsSinceEpoch,
+                    build: (_, time) => Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  "Time used",
+                                  style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,
+                                ),
+                                Row(
+                                  children: [
+                                    Text("${sec == 59 ? min++ : min}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0,
+                                            color: min > duration - 5
+                                                ? Colors.red
+                                                : Colors.white,
+                                            fontFamily: "Montserrat")),
+                                    Text(":",
+                                        style: MEDIUM_WHITE_BUTTON_TEXT_BOLD),
+                                    Text(
+                                        "${sec != 59 ? sec++ : sec = sec - 59}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0,
+                                            color: min > duration - 5
+                                                ? Colors.red
+                                                : Colors.white,
+                                            fontFamily: "Montserrat")),
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                    "Time left",
+                                    style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,
+                                  ),
+                                  Text("${duration - min} mins",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18.0,
+                                          color: min > duration - 5
+                                              ? Colors.red
+                                              : Colors.white,
+                                          fontFamily: "Montserrat")),
+                                ]),
+                          ],
+                        )),
+                  ),
+                ),
+                preferredSize: Size(deviceSize.width, 50)),
+          ), */
+
+          // body:
+          Container(
         child: Stack(
           children: <Widget>[
             SingleChildScrollView(
@@ -191,18 +401,18 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
                 children: <Widget>[
                   SizedBox(height: 20),
                   QuestionCard(
-                      questionNumber: questionNumber,
-                      devSize: deviceSize,
-                      questionData: question,
+                    questionNumber: questionNumber,
+                    devSize: deviceSize,
+                    questionData: question,
                   ),
                   SizedBox(
                     height: 10,
                   ),
-
                   Column(
                     children: alternatives.map<Widget>((e) {
                       _alt++;
                       return AnswerCard(
+                        color: Colors.black,
                         devSize: deviceSize,
                         isChecked: checked[_alt - 1],
                         letter: _letters[_alt - 1],
@@ -293,6 +503,7 @@ class PageControls extends StatelessWidget {
     return Container(
       height: 70,
       width: devSize.width / 2,
+      // ignore: deprecated_member_use
       child: FlatButton(
         color: buttonColor,
         onPressed: onTap,
@@ -313,8 +524,8 @@ class QuestionCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Container(
+        padding: EdgeInsets.all(5),
         width: devSize.width,
-
         decoration: BoxDecoration(
             color: APP_BAR_COLOR,
             borderRadius: BorderRadius.circular(20),
@@ -329,12 +540,27 @@ class QuestionCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 15, 15),
-              child: Text("Question $questionNumber", style: MEDIUM_WHITE_BUTTON_TEXT,),
+              child: Text(
+                "Question $questionNumber",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                  color: Colors.white,
+                  fontFamily: "Montserrat",
+                ),
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0,0,0,20),
-              child: Text("$questionData", style: MEDIUM_WHITE_BUTTON_TEXT,),
-            ),
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+              child: Text(
+                "$questionData",
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18.0,
+                    color: Colors.white,
+                    fontFamily: "Montserrat"),
+              ),
+            )
           ],
         ),
       ),
@@ -366,6 +592,8 @@ class AnswerCard extends StatelessWidget {
       child: InkWell(
         onTap: onAnswerTapped,
         child: Container(
+          //width: 3270,
+          //height: 120,
           width: devSize.width,
           // height: 60,
           decoration: BoxDecoration(
@@ -379,20 +607,22 @@ class AnswerCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                    text: "$letter.\t\t",
-                    style: isChecked
-                        ? MEDIUM_WHITE_BUTTON_TEXT_BOLD
-                        : LABEL_TEXT_STYLE_MEDIUM_BLACK,
-                  ),
-                  TextSpan(
-                      text: option,
+                Expanded(
+                  child: RichText(
+                      text: TextSpan(children: [
+                    TextSpan(
+                      text: "$letter.\t\t",
                       style: isChecked
-                          ? NORMAL_WHITE_BUTTON_LABEL
-                          : NORMAL_BLACK_BUTTON_TEXT)
-                ])),
+                          ? MEDIUM_WHITE_BUTTON_TEXT_BOLD
+                          : LABEL_TEXT_STYLE_MEDIUM_BLACK,
+                    ),
+                    TextSpan(
+                        text: option,
+                        style: isChecked
+                            ? NORMAL_WHITE_BUTTON_LABEL
+                            : NORMAL_BLACK_BUTTON_TEXT)
+                  ])),
+                ),
                 isChecked
                     ? Icon(
                         FontAwesome.check,

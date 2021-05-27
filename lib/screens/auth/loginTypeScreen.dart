@@ -44,6 +44,7 @@ class LoginTypeScreen extends StatelessWidget {
                           Container(
                             width: deviceSize.width,
                             height: 50,
+                            // ignore: deprecated_member_use
                             child: FlatButton(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
@@ -62,6 +63,7 @@ class LoginTypeScreen extends StatelessWidget {
                           Container(
                             width: deviceSize.width,
                             height: 50,
+                            // ignore: deprecated_member_use
                             child: FlatButton(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
