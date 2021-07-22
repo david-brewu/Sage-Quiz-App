@@ -71,8 +71,9 @@ class _VideoItemsState extends State<VideoItems> {
 
 class VideoScreen extends StatefulWidget {
   final String path;
+  final String name;
 
-  VideoScreen({this.path});
+  VideoScreen({this.name, this.path});
 
   @override
   _VideoScreenState createState() => _VideoScreenState();
@@ -133,7 +134,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   }
                 }),
             automaticallyImplyLeading: false,
-            title: Text('Flutter Video Player Demo', style: APP_BAR_TEXTSTYLE),
+            title: Text(widget.name, style: APP_BAR_TEXTSTYLE),
           ),
           body: Container(
             child: VideoItems(

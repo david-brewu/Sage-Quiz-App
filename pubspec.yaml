@@ -63,6 +63,13 @@ dependencies:
   dio:
   chewie:
   video_player:
+  intro_views_flutter: ^3.2.0
+  firebase_messaging:
+  get_it:
+  flutter_local_notifications: 
+  overlay_support:
+  introduction_screen:
+  share:
   
 
 

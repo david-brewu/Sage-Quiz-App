@@ -38,7 +38,7 @@ class ShowAnswer extends StatelessWidget {
               padding: EdgeInsets.only(top: 5),
               color: Colors.black,
               onPressed: () => Navigator.of(context).pushReplacement(
-                  CupertinoPageRoute(builder: (context) => ScoreBoard(comID))),
+                  CupertinoPageRoute(builder: (context) => ScoreBoard(comID, ))),
               child: Text('Go to rankings',
                   style: TextStyle(
                       color: Colors.white,
@@ -142,6 +142,7 @@ class ShowAnswer extends StatelessWidget {
 Widget competionStream(User user, String comID) {
   return StreamBuilder(
     stream: CloudFirestoreServices.getCorrectAnswers(user, comID),
+    // ignore: missing_return
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return Scaffold(

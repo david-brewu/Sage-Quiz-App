@@ -172,6 +172,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       data.remove("password");
       user.user.updateProfile(displayName: data["full_name"]);
       data["uid"] = user.user.uid;
+
       return FirebaseFirestore.instance
           .collection("users")
           .add(data)
@@ -186,6 +187,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             user.user;
 
         user.user.sendEmailVerification();
+
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -206,8 +208,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             );
           },
         );
-        /* return Navigator.of(context).pushAndRemoveUntil(
-                CupertinoPageRoute(builder: (context) => HomeScreen()),(predicate)=>false); */
+        return Navigator.of(context).pushAndRemoveUntil(
+            CupertinoPageRoute(builder: (context) => HomeScreen()),
+            (predicate) => false);
       });
     }).catchError((error) {
       setState(() {

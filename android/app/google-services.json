@@ -1,92 +1,41 @@
 {
   "project_info": {
-    "project_number": "887115796694",
-    "firebase_url": "https://videostreaming-f41cc.firebaseio.com",
-    "project_id": "videostreaming-f41cc",
-    "storage_bucket": "videostreaming-f41cc.appspot.com"
+    "project_number": "912284990018",
+    "project_id": "sage-app-17dfb",
+    "storage_bucket": "sage-app-17dfb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:887115796694:android:19238d0a2d2a23d1c4f977",
+        "mobilesdk_app_id": "1:912284990018:android:759dd7e1ca8dfa03c68bdb",
         "android_client_info": {
-          "package_name": "com.example.Football_Streaming"
+          "package_name": "com.mat.nkudu"
         }
       },
       "oauth_client": [
         {
-          "client_id": "887115796694-j9cg8jbr4etp13kvav379mdpiid3m07r.apps.googleusercontent.com",
+          "client_id": "912284990018-do827ptfetr6fel5mk97prh3sp3gp5km.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mat.nkudu",
+            "certificate_hash": "667817393efd48ecef0796e655f635b8c067a823"
+          }
+        },
+        {
+          "client_id": "912284990018-mg6qsc9fia09nhca4tp23c1cek7tvvrb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDk1DZEP6IJsMeVXLYavtWYr4JQD_fXFOk"
+          "current_key": "AIzaSyDXre_78tugpQnrRquDAeAC0kr4KXOmZbs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "887115796694-j9cg8jbr4etp13kvav379mdpiid3m07r.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:887115796694:android:16b2be51344ec5e7c4f977",
-        "android_client_info": {
-          "package_name": "com.example.video_samples"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "887115796694-j9cg8jbr4etp13kvav379mdpiid3m07r.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDk1DZEP6IJsMeVXLYavtWYr4JQD_fXFOk"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "887115796694-j9cg8jbr4etp13kvav379mdpiid3m07r.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:887115796694:android:5aeabe43b06b27bcc4f977",
-        "android_client_info": {
-          "package_name": "me.kostech.gamie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "887115796694-j9cg8jbr4etp13kvav379mdpiid3m07r.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDk1DZEP6IJsMeVXLYavtWYr4JQD_fXFOk"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "887115796694-j9cg8jbr4etp13kvav379mdpiid3m07r.apps.googleusercontent.com",
+              "client_id": "912284990018-mg6qsc9fia09nhca4tp23c1cek7tvvrb.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

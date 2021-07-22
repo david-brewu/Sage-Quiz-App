@@ -17,14 +17,31 @@ class CompetitionHistory extends StatefulWidget {
   _CompetitionHistoryState createState() => _CompetitionHistoryState();
 }
 
+final newHisList = <String>[];
+
 class _CompetitionHistoryState extends State<CompetitionHistory> {
+  bool hasOccur;
+
+  @override
+  void initState() {
+    hasOccur = true;
+    super.initState();
+  }
+
+  String onError() {
+    print('error');
+    return 'error';
+  }
+
   @override
   Widget build(BuildContext context) {
+    int detectNum = 0;
     User user = Provider.of<UserAuthProvider>(context).authUser;
     final networkProvider = Provider.of<NetworkProvider>(context);
     return networkProvider.connectionStatus
         ? StreamBuilder(
-            stream: CloudFirestoreServices.getHistoryStream(user),
+            stream: CloudFirestoreServices.getHistoryStream(user)
+                .handleError(onError),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
                 return Center(
@@ -40,20 +57,49 @@ class _CompetitionHistoryState extends State<CompetitionHistory> {
               return ListView.builder(
                 physics: BouncingScrollPhysics(),
                 itemCount: docs.length,
-                itemBuilder: (context, index) {
+                itemBuilder: (
+                  context,
+                  index,
+                ) {
                   Map<String, dynamic> document = docs[index].data();
+                  final hisList = <String>[];
                   final title = document["title"];
                   final dateTaken = document["dateTaken"];
                   final score = document["score"];
                   final total = document["documents"].length;
                   final competitionId = document["competitionId"];
-                  return HistoryCard(
+                  final id = document['userId'];
+                  hisList.add(id);
+                  /*   for (int i = 0; i <= index; i++) {
+                    print(docs[index].data()['userId'].toString().characters);
+                    if (docs[index]
+                        .data()['userId']
+                        .toString()
+                        .characters
+                        .contains(
+                            docs[i].data()['userid'].toString().characters)) {
+                      print(true);
+                      setState(() {
+                        hasOccur = false;
+                      });
+                    }
+                  } */
+                  return
+                      //hasOccur
+                      //    ?
+
+                      //    hisList.contains(id) && !newHisList.contains(id)
+                      //      ?
+                      HistoryCard(
                     title: title,
                     dateTaken: dateTaken,
                     score: score,
                     total: total,
                     competitionId: competitionId,
+                    id: id,
                   );
+                  //    : SizedBox.shrink();
+                  //   : SizedBox.shrink();
                 },
               );
             },
@@ -69,18 +115,21 @@ class HistoryCard extends StatelessWidget {
   final score;
   final total;
   final competitionId;
-  const HistoryCard({
-    Key key,
-    this.user,
-    this.title,
-    this.dateTaken,
-    this.score,
-    this.total,
-    this.competitionId,
-  }) : super(key: key);
+  final id;
+  const HistoryCard(
+      {Key key,
+      this.user,
+      this.title,
+      this.dateTaken,
+      this.score,
+      this.total,
+      this.competitionId,
+      this.id})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // if (hisList.contains(id)) newHisList.add(id);
     final DateTime date = dateTaken.toDate();
     final month = date.month;
     final day = date.day;
@@ -127,10 +176,7 @@ class HistoryCard extends StatelessWidget {
       actions: <Widget>[
         // ignore: deprecated_member_use
         FlatButton(
-            onPressed: () => ScoreBoard(
-                  competitionId,
-                ),
-            child: Text("Ranking")),
+            onPressed: () => ScoreBoard(competitionId), child: Text("Ranking")),
         // ignore: deprecated_member_use
         FlatButton(
           onPressed: () => ShowAnswer(competitionId),

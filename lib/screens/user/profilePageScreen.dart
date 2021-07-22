@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+/* import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +8,7 @@ import 'package:gamie/screens/profilePageWidgets/activities.dart';
 import 'package:gamie/screens/profilePageWidgets/personalInfo.dart';
 import 'package:provider/provider.dart';
 
-
 import '../../Providers/edit_profile_provider.dart';
-
 
 class ProfilePage extends StatefulWidget {
   static String routeName = "profile_page";
@@ -25,39 +23,39 @@ class _ProfilePageState extends State<ProfilePage>
   String imagePath;
   String phone = "0545555777";
 
-
-
   TabController _tabController;
   List<Tab> _tabs = [
     Tab(
       text: "Personal Info",
     ),
-    Tab(text: "Activities")
+    //  Tab(text: "Activities")
   ];
 
   List<Widget> generatetabViews() => [
-        PersonalInfo(formKey:GlobalKey<FormState>()),
-        Activities(),
+        PersonalInfo(formKey: GlobalKey<FormState>()),
+        //Activities(),
       ];
-
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 1, vsync: this);
     super.initState();
   }
-
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<UserAuthProvider>(context).authUser;
+    print(user.displayName);
+    print(user.email);
+    print(user.phoneNumber);
     final edit = Provider.of<EditProfileProvider>(context);
-    String name =  user.displayName;
+    String name = user.displayName;
     String email = user.email;
     return SafeArea(
       child: Scaffold(
@@ -89,9 +87,8 @@ class _ProfilePageState extends State<ProfilePage>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-
                               Text(
-                                name,
+                                name == null ? '' : name,
                                 style: LABEL_TEXT_STYLE_MEDIUM_BLACK,
                               ),
                               Text(
@@ -152,10 +149,10 @@ class _ProfilePageState extends State<ProfilePage>
                       child: Container(
                         child: user.photoURL != null
                             ? CachedNetworkImage(
-                          placeholder: (context, url) => CircularProgressIndicator(),
-                          imageUrl: user.photoURL,
-                          fit: BoxFit.contain
-                        )
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                imageUrl: user.photoURL,
+                                fit: BoxFit.contain)
                             : Image.asset(
                                 DEFAULT_USER_AVATAR,
                                 fit: BoxFit.cover,
@@ -167,8 +164,7 @@ class _ProfilePageState extends State<ProfilePage>
                 right: 40,
                 top: MediaQuery.of(context).size.height * (1 / 3.2),
                 child: InkWell(
-                  onTap: ()=>edit.edit = true 
-                  ,
+                  onTap: () => edit.edit = true,
                   child: Container(
                     width: 60,
                     height: 60,
@@ -191,3 +187,4 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 }
+ */

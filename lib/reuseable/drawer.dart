@@ -1,21 +1,33 @@
+import 'dart:convert';
+
 import 'package:gamie/payments/main_payments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:gamie/screens/auth/login.dart';
+import 'package:gamie/screens/profilePageWidgets/personalInfo.dart';
+import 'package:gamie/screens/user/user_course_management.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../config/config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gamie/screens/user/profilePageScreen.dart';
 import 'package:gamie/screens/Knowledge/pascoPage.dart';
 import 'package:gamie/screens/user/settingScreen.dart';
-import 'package:gamie/screens/user/inviteScreen.dart';
 import 'package:provider/provider.dart';
 import '../screens/auth/gettingStartedScreen.dart';
 import '../Providers/authUserProvider.dart';
 
+String mydocID;
+
 class CustomDrawer extends StatelessWidget {
+  //CustomDrawer(this.name, this.phone, this.address, this.photo, this.email);
   @override
   Widget build(BuildContext context) {
+    // String id;
+
+    // Map<String, dynamic> data;
     final user = Provider.of<UserAuthProvider>(context);
     return SafeArea(
       child: Theme(
@@ -28,11 +40,9 @@ class CustomDrawer extends StatelessWidget {
                   currentAccountPicture: ClipRRect(
                       borderRadius: BorderRadius.circular(40),
                       child: user.authUser.photoURL != null
-                          ? CachedNetworkImage(
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(),
-                              imageUrl: user.authUser.photoURL,
-                              fit: BoxFit.contain)
+                          ? CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                  user.authUser.photoURL))
                           : Image.asset(
                               USER_PROFILE_PIC,
                               fit: BoxFit.cover,
@@ -51,8 +61,37 @@ class CustomDrawer extends StatelessWidget {
                   children: <Widget>[
                     ListTile(
                       onTap: () async {
-                        await Navigator.of(context)
-                            .popAndPushNamed(ProfilePage.routeName);
+                        Navigator.pop(context);
+                        getUser(FirebaseAuth.instance.currentUser);
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (BuildContext context) =>
+                                    UserCourses()));
+                      },
+                      leading: Icon(
+                        Icons.remove_circle_outline,
+                        color: Colors.black,
+                      ),
+                      title: Text(
+                        "Manage Courses",
+                        style: NORMAL_BLACK_BUTTON_TEXT,
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () async {
+                        getUser(FirebaseAuth.instance.currentUser);
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        Map<String, dynamic> data =
+                            jsonDecode(prefs.getString(PREFS_PERSONAL_INFO));
+                        mydocID = data['userid'];
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => PersonalInfo(
+                                  formKey: GlobalKey<FormState>(),
+                                  docID: mydocID,
+                                )));
                       },
                       leading: Icon(
                         FontAwesome5.edit,
@@ -106,9 +145,14 @@ class CustomDrawer extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () {
-                        Navigator.pop(context);
-                        Navigator.of(context).push(CupertinoPageRoute(
-                            builder: (context) => InviteScreen()));
+                        // Navigator.pop(context);
+                        //Navigator.of(context).push(CupertinoPageRoute(
+                        //  builder: (context) => InviteScreen()));
+                        final RenderBox box = context.findRenderObject();
+                        Share.share('text',
+                            subject: 'Check Out this Cool App',
+                            sharePositionOrigin:
+                                box.localToGlobal(Offset.zero) & box.size);
                       },
                       leading: Icon(
                         Icons.local_laundry_service,
@@ -180,10 +224,13 @@ void _showAlertDialog(BuildContext context) {
           child: Text('Yes'),
           onPressed: () async {
             await FirebaseAuth.instance.signOut();
-            Provider.of<UserAuthProvider>(context, listen: false).reset();
+            // await GoogleSignIn().signOut();
+            //Provider.of<UserAuthProvider>(context).reset();
             //go to getting started
-            Navigator.pushNamedAndRemoveUntil(
-                context, GettingStartedScreen.routeName, (route) => false);
+            Navigator.of(context).pushAndRemoveUntil(
+                CupertinoPageRoute(
+                    builder: (context) => GettingStartedScreen()),
+                (route) => false);
           },
         ),
         FlatButton(

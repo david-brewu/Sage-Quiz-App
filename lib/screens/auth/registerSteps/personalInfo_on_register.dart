@@ -15,14 +15,14 @@ class PersonalInfoOnRegister extends StatefulWidget {
 }
 
 class _PersonalInfoOnRegisterState extends State<PersonalInfoOnRegister> {
-
-
   Map<String, dynamic> data = {};
-
 
   void _onNameChange(String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     data["full_name"] = value;
+    data["photURL"] = '';
+    data['courses'] = [];
+
     prefs.setString(PREFS_PERSONAL_INFO, jsonEncode(data));
   }
 

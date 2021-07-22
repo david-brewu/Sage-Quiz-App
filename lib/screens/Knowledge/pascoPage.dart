@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamie/config/config.dart';
 import 'package:gamie/screens/Knowledge/PastQuestionsScreen.dart';
+import 'package:gamie/screens/Knowledge/pass_question_pdf.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
@@ -12,18 +13,21 @@ class PascoPage extends StatefulWidget {
 }
 
 class _PascoPageState extends State<PascoPage> {
-  String course = "JAVA BASICS";
+  String course = "RME";
 
   final animPath = 'assets/lottie_animations/learning.zip';
 
-  String year = DateFormat.yMMMd().format(DateTime.now());
+  String year = DateFormat.y().format(DateTime(2019));
 
   List<String> _courses = [
-    "JAVA BASICS",
-    "MACHINE LEARNING",
-    "CALCULUS I",
-    "BIOLOGY",
-    "MECHANICAL PHYSICS",
+    "RME",
+    "Mathematics",
+    "Social Studies",
+    "Pre-Tech",
+    "Integrated Science",
+    "ICT",
+    "English",
+    "Home Economics"
   ];
 
   void _changeCourse(BuildContext context) {
@@ -45,12 +49,17 @@ class _PascoPageState extends State<PascoPage> {
     showModalBottomSheet(
         builder: (context) => Container(
             height: MediaQuery.of(context).size.height / 5,
+
+            //   child: CupertinoDatePicker(
             child: CupertinoDatePicker(
-                initialDateTime: DateTime.now(),
+                minimumYear: 1980,
+                maximumYear: 2025,
+                //  initialDateTime: DateTime.now(),
+                initialDateTime: DateTime(2019),
                 mode: CupertinoDatePickerMode.date,
                 onDateTimeChanged: (val) {
                   setState(() {
-                    year = DateFormat.yMMMd().format(val);
+                    year = DateFormat.y().format(val);
                   });
                 })),
         context: context);
@@ -58,10 +67,9 @@ class _PascoPageState extends State<PascoPage> {
 
   void _checkOutQuestion() {
     Navigator.of(context).push(CupertinoPageRoute(
-        builder: (context) => PastQuestions(
-              course: course,
-              date: year,
-            )));
+        builder: (context) =>
+            // PastQuestions( course: course,date: year,)
+            PDFDoc(course, year)));
   }
 
   @override

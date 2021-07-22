@@ -1,4 +1,4 @@
-package me.kostech.gamie
+package com.mat.nkudu
 
 import io.flutter.embedding.android.FlutterActivity
 

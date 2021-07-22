@@ -10,14 +10,12 @@ const String USER_AVATAR_FILENAME = "headshot.png";
 // ignore: non_constant_identifier_names
 String USER_PROFILE_PIC_FROM_FILE;
 
-
 // LocalStorage keys
 const PREFS_PERSONAL_INFO = "personal_info";
 const PREFS_PAYMENT_METHODS = "payment_methods";
 
 // Database constants
 const String DATABASE_NAME = "tpp.db";
-
 
 // UNIVERSAL STYLING VALUES
 const double BLUR = 1.50;
@@ -228,8 +226,7 @@ const ERROR_MSG_TEXTSTYLE = TextStyle(
 
 //paragraph textstyle
 const TextStyle PARAGRAPH_TEXTSTYLE = TextStyle(
-  fontFamily: 'Montserrat',
-  fontWeight: FontWeight.w600,
-  fontSize: 17,
-  wordSpacing: 1.5
-);
+    fontFamily: 'Montserrat',
+    fontWeight: FontWeight.w600,
+    fontSize: 17,
+    wordSpacing: 1.5);

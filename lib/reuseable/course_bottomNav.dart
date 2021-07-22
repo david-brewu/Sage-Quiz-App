@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_icons/flutter_icons.dart';import 'package:gamie/Providers/course_bottomNav_provider.dart';
 import 'package:provider/provider.dart';
 import '../Providers/bottomNav_provider.dart';
 import '../config/config.dart';
 
-class BottomNav extends StatelessWidget {
+class CourseBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<BottomNavProvider>(context);
@@ -16,32 +16,32 @@ class BottomNav extends StatelessWidget {
           BottomNavigationBarItem(
             icon: provider.index == 0
                 ? _activeNav(
-                    Octicons.home,
+                    Icons.note,
                   )
-                : Icon(Octicons.home),
+                : Icon(Icons.note),
             // ignore: deprecated_member_use
-            title: Text("Competitions"),
+            title: Text("Slides"),
           ),
           BottomNavigationBarItem(
             icon: provider.index == 1
-                ? _activeNav(Icons.event_available)
-                : Icon(Icons.event_available),
+                ? _activeNav(Octicons.device_camera_video)
+                : Icon(Octicons.device_camera_video),
             //ignore: deprecated_member_use
-            title: Text("Enrolled"),
+            title: Text("Videos"),
           ),
           BottomNavigationBarItem(
             icon: provider.index == 2
-                ? _activeNav(Icons.history)
-                : Icon(Icons.history),
-            // ignore: deprecated_member_use
-            title: Text("History"),
-          ),
-          BottomNavigationBarItem(
-            icon: provider.index == 3
                 ? _activeNav(Octicons.book)
                 : Icon(Octicons.book),
             // ignore: deprecated_member_use
-            title: Text("Learn"),
+            title: Text("Books"),
+          ),
+          BottomNavigationBarItem(
+            icon: provider.index == 3
+                ? _activeNav(Octicons.question)
+                : Icon(Octicons.question),
+            // ignore: deprecated_member_use
+            title: Text("Questions"),
           )
         ]);
   }

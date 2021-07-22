@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gamie/config/config.dart';
+import 'package:gamie/models/user_model.dart';
+import 'package:gamie/screens/homeScreenNavs/semester_folders.dart';
+import 'package:gamie/screens/homeScreenNavs/course_materials.dart';
 import 'package:gamie/services/cloud_firestore_services.dart';
 import '../../reuseable/no_connectivity_widget.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +40,7 @@ class _LearningNavState extends State<LearningNav> {
     return SafeArea(
         child: Scaffold(
       body: networkProvider.connectionStatus
-          ? Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          ? /* Column(mainAxisAlignment: MainAxisAlignment.start, children: [
               SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -55,9 +57,8 @@ class _LearningNavState extends State<LearningNav> {
                           borderRadius:
                               BorderRadius.all(Radius.circular(25.0)))),
                 ),
-              ),
-              Expanded(child: competionStream(user))
-            ])
+              ), */
+          coursesStream(user)
           : Center(child: NoConnectivityWidget()),
     ));
   }
@@ -89,13 +90,12 @@ class _LearningNavState extends State<LearningNav> {
 }
 
 //User user;
-Widget competionStream(User user) {
+Widget coursesStream(User user) {
   // List<DocumentSnapshot> data;
-  final TextEditingController editingController = TextEditingController();
+  //final TextEditingController editingController = TextEditingController();
   var enrolledIds = <String>[];
   return StreamBuilder(
-      stream: CloudFirestoreServices.stremCourses(),
-      //stream: FirebaseFirestore.instance.collection("competitions").snapshots(),
+      stream: CloudFirestoreServices.personalCourses(user),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -109,61 +109,62 @@ Widget competionStream(User user) {
           );
         }
         if (snapshot.hasData) {
-          data = snapshot.data.docs;
-          print(data.length);
-          print(data.toString());
-          bool con = data.every((element) => enrolledIds.contains(element.id));
-          if (con)
-            return Center(
-              child: EmptyWidget(
-                msg: 'There are no courses available. Please check back later',
-              ),
-            );
+          List<DocumentSnapshot> data = snapshot.data.docs;
           if (data.length == 0)
             return Center(
               child: EmptyWidget(
                 msg: 'There are no courses available. Please check back later',
               ),
             );
-          return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return BuildCourseList(CourseModel.fromMap(data[index], index));
-              });
+          return BuildCourseList(
+            UserDataModel.fromMap(data[0], 0),
+          );
         } else
           return Text('has not data');
       });
 }
 
 class BuildCourseList extends StatelessWidget {
-  final CourseModel dataModel;
-  BuildCourseList(this.dataModel);
+  final UserDataModel userData;
+  BuildCourseList(this.userData);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          title: Text(dataModel.title,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold)),
-          subtitle: Text(dataModel.courseCode),
-          leading: Image.asset(
-            'assets/images/courses.jpg',
-            scale: 6,
-          ),
-          onTap: () {
-            Navigator.push(
+    return userData.courses.isEmpty
+        ? Center(
+            child: Text(
+              'You have no course. Add a course from the course management in the drawer',
+              textAlign: TextAlign.center,
+            ),
+          )
+        : ListView.builder(
+            itemCount: userData.courses.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: Image.asset(
+                  'assets/images/courses.jpg',
+                  scale: 6,
+                ),
+                onTap: () {
+                  Navigator.of(context).push(CupertinoPageRoute(
+                      builder: (context) => SemesterFolders(
+                            userData.courses[index],
+                          )));
+                  /* Navigator.push(
                 context,
                 CupertinoPageRoute(
                   builder: (context) => CoursePage(dataModel),
-                ));
-          },
-        ),
-      ],
-    );
+                )); */
+                },
+                title: Text(
+                  userData.courses[index],
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              );
+            });
   }
 }
 
@@ -195,9 +196,9 @@ class CoursePage extends StatelessWidget {
                         context,
                         CupertinoPageRoute(
                           builder: (context) => LectureNotes(
-                            model: model,
+                            //  model: model,
                             materialType: 'lecture_slides',
-                            title: 'Lecture Slides',
+
                             imagePath: 'assets/images/lecturenotes.jpg',
                           ),
                         ));
@@ -213,9 +214,9 @@ class CoursePage extends StatelessWidget {
                         context,
                         CupertinoPageRoute(
                           builder: (context) => LectureNotes(
-                            model: model,
+                            //       model: model,
                             materialType: 'lecture_videos',
-                            title: 'Lecture Videos',
+
                             imagePath: 'assets/images/videoicon.jpg',
                           ),
                         ));
@@ -231,9 +232,9 @@ class CoursePage extends StatelessWidget {
                         context,
                         CupertinoPageRoute(
                           builder: (context) => LectureNotes(
-                            model: model,
+                            //      model: model,
                             materialType: 'course_books',
-                            title: 'Course Books',
+
                             imagePath: 'assets/images/bookicon.png',
                           ),
                         ));
@@ -249,9 +250,9 @@ class CoursePage extends StatelessWidget {
                       context,
                       CupertinoPageRoute(
                         builder: (context) => LectureNotes(
-                          model: model,
+                          //    model: model,
                           materialType: 'sample_questions',
-                          title: 'Sample Questions Questions',
+
                           imagePath: 'assets/images/questionsicon.png',
                         ),
                       ));

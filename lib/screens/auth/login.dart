@@ -1,19 +1,66 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gamie/Methods/ErrorHandler.dart';
 import 'package:gamie/config/config.dart';
-import 'package:gamie/models/google_auth.dart';
+import 'package:gamie/models/user_model.dart';
 import 'package:gamie/reuseable/components.dart';
+import 'package:gamie/reuseable/drawer.dart';
 import 'package:gamie/screens/auth/registerScreen.dart';
+import 'package:gamie/services/cloud_firestore_services.dart';
 import 'package:loading_animations/loading_animations.dart';
-import 'package:toast/toast.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Providers/authUserProvider.dart';
 import 'package:the_validator/the_validator.dart';
 import '../homeScreen.dart';
 import 'reset_password_screens/emailEntry.dart';
+
+Widget getUser(User user) {
+  //SharedPreferences prefs = await SharedPreferences.getInstance();
+  // print('begin');
+  return StreamBuilder(
+      stream: CloudFirestoreServices.userStream(user.uid),
+      //stream: FirebaseFirestore.instance.collection("competitions").snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasError) {
+          print('snap has error');
+        }
+        if (snapshot.hasData) {
+          List<DocumentSnapshot> data = snapshot.data.docs;
+          //  print(data.length);
+          //  print(data.toString());
+
+          if (data.length == 0) print('no data');
+          return saveDoc(UserDataModel.fromMap(data[0], 0), prefs);
+        } else
+          return SizedBox.shrink();
+      });
+}
+
+Widget saveDoc(UserDataModel model, SharedPreferences prefs) {
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  Map<String, dynamic> userData = {};
+
+  userData['userid'] = model.id;
+  userData['full_name'] = model.fullName;
+  userData['photURL'] = model.photoURL;
+  userData['email_address'] = model.email;
+  userData['phone_number'] = model.phoneNumber;
+  userData['school'] = model.school;
+
+  prefs.setString(PREFS_PERSONAL_INFO, jsonEncode(userData));
+  print('finished');
+
+  return HomeScreen();
+}
 
 class LoginScreen extends StatefulWidget {
   static String routeName = "login_screen";
@@ -69,11 +116,13 @@ class _LoginScreenState extends State<LoginScreen> {
       if (resp.user != null) {
         Provider.of<UserAuthProvider>(context, listen: false).setAuthUser =
             resp.user;
+
         if (_auth.currentUser.emailVerified) {
           Navigator.pushNamedAndRemoveUntil(
-              context, HomeScreen.routeName, (route) => false);
+              context, MyClass.routeName, (route) => false);
         } else {
           resp.user.sendEmailVerification();
+
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -227,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(
                             height: widgetHeight,
                           ),
-                          CustomRoundedButton(
+                          /*  CustomRoundedButton(
                             onTap: () async {
                               signInWithGoogle().then((value) {
                                 if (value.user != null) {
@@ -250,9 +299,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             image: GOOGLE_IMG,
                             color: ASH_BUTTON_COLOR,
                             text: "Sign in with Google",
-                          ),
+                          ), */
                           SizedBox(
-                            height: 30,
+                            height: 40,
                           ),
 
                           Align(

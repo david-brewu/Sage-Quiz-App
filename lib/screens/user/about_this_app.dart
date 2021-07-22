@@ -25,19 +25,25 @@ Duis non pulvinar libero, molestie a nibh. Etiam in semper ex. Mauris maximus qu
         centerTitle: true,
       ),
       body: Theme(
-              data: ThemeData(
-                highlightColor: Colors.blue[300],
-              ),
-              child: Scrollbar(
+        data: ThemeData(
+          highlightColor: Colors.blue[300],
+        ),
+        child: Scrollbar(
           controller: _scrollController,
           isAlwaysShown: true,
           child: SingleChildScrollView(
+              controller: _scrollController,
               physics: BouncingScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
-            children: <Widget>[Text(_terms,style: PARAGRAPH_TEXTSTYLE,),],
-          ),
+                  children: <Widget>[
+                    Text(
+                      _terms,
+                      style: PARAGRAPH_TEXTSTYLE,
+                    ),
+                  ],
+                ),
               )),
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gamie/Methods/CompetitionQueue.dart';
 import 'package:gamie/config/config.dart';
 import 'package:gamie/config/dbkeys.dart';
+import 'package:gamie/screens/auth/login.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/competition_data_model.dart';
@@ -20,6 +21,12 @@ class Competitions extends StatefulWidget {
 }
 
 class _CompetitionsState extends State<Competitions> {
+  @override
+  void initState() {
+    getUser(FirebaseAuth.instance.currentUser);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final networkProvider = Provider.of<NetworkProvider>(context);
@@ -158,7 +165,7 @@ class CompetitionCard extends StatelessWidget {
             child: FlatButton(
                 onPressed: _enrollUserInCompetition,
                 child: Text(
-                  "Enroll",
+                  "Enroll Now",
                   style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,
                 )),
           )
@@ -187,11 +194,13 @@ class CompetitionCard extends StatelessWidget {
         .limit(1)
         .get();
     if (document.docs.length == 1) return;
+    print('onit');
     // create the doc
     FirebaseFirestore.instance
         .collection(ENROLMENTS)
         .add(payload)
         .whenComplete(() async {
+      print('done');
       competitionQueue.add(dataModel.id);
       // documents.removeAt(index);
       //Trigger firebase reload

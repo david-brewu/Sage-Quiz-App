@@ -15,11 +15,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 _LectureNotesState _lectureNotes;
 
 class LectureNotes extends StatefulWidget {
-  final CourseModel model;
+  final String courseName;
   final String materialType;
-  final String title;
+  final String semester;
+  //final String title;
   final String imagePath;
-  LectureNotes({this.model, this.materialType, this.title, this.imagePath});
+  LectureNotes(
+      {this.courseName, this.materialType, this.semester, this.imagePath});
   @override
   _LectureNotesState createState() {
     _lectureNotes = _LectureNotesState();
@@ -36,13 +38,6 @@ class _LectureNotesState extends State<LectureNotes> {
 
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(
-          backgroundColor: APP_BAR_COLOR,
-          centerTitle: true,
-          title: Text(
-            widget.title,
-            style: APP_BAR_TEXTSTYLE,
-          )),
       body: networkProvider.connectionStatus
           ? buildLectureNotesList()
           : Center(child: NoConnectivityWidget()),
@@ -51,7 +46,7 @@ class _LectureNotesState extends State<LectureNotes> {
 
   Widget buildLectureNotesList() {
     Future<List<Reference>> slideList =
-        listExample(widget.model.id, widget.materialType);
+        listExample(widget.courseName, widget.semester, widget.materialType);
     return StreamBuilder(
         stream: slideList.asStream(),
         builder: (context, snapshot) {
@@ -88,8 +83,7 @@ class _LectureNotesState extends State<LectureNotes> {
             return ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (context, index) {
-                  return BuildReferenceList(
-                      widget.model, data[index], widget.imagePath);
+                  return BuildReferenceList(data[index], widget.imagePath);
                 });
           } else
             return Text(
@@ -98,19 +92,20 @@ class _LectureNotesState extends State<LectureNotes> {
   }
 }
 
-Future<List<Reference>> listExample(String courseName, materialType) async {
+Future<List<Reference>> listExample(
+    String courseName, semester, materialType) async {
   ListResult result = await FirebaseStorage.instance
-      .ref(courseName + '/' + materialType)
+      .ref(courseName + '/' + semester + '/' + materialType)
       .listAll();
   return result.items;
 }
 
 class BuildReferenceList extends StatelessWidget {
-  final CourseModel dataModel;
+  //final CourseModel dataModel;
   final Reference reference;
   final String imagePath;
 
-  BuildReferenceList(this.dataModel, this.reference, this.imagePath);
+  BuildReferenceList(this.reference, this.imagePath);
 
   Future url() async {
     String result = await reference.getDownloadURL();

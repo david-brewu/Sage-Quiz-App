@@ -8,6 +8,8 @@ import 'package:gamie/Methods/CompetitionQueue.dart';
 import 'package:gamie/Providers/authUserProvider.dart';
 import 'package:gamie/config/config.dart';
 import 'package:gamie/config/dbkeys.dart';
+import 'package:gamie/reuseable/network_error_widget.dart';
+import 'package:gamie/screens/auth/login.dart';
 import 'package:gamie/screens/competition/competitionStartConfirmation.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -45,13 +47,21 @@ Widget competitionStream(User user) {
       stream: CloudFirestoreServices.getHistoryStream(user),
       //stream: FirebaseFirestore.instance.collection('results').snapshots(),
       builder: (context, snapshot) {
+        print('something');
         competitionIds = [];
-        // if (snapshot.connectionState == ConnectionState.waiting)
-        //  return Scaffold(
-        //   body: Center(child: CircularProgressIndicator()),
-        // );
-        //if(snapshot.hasError)
-        //  return Scaffold(body: Center(child: Text("There was an error", style: DISABLED_TEXT,),),);
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        if (snapshot.hasError)
+          return Scaffold(
+            body: Center(
+              child: Text(
+                "There was an error",
+                style: DISABLED_TEXT,
+              ),
+            ),
+          );
         if (snapshot.hasData) {
           List<DocumentSnapshot> enrolledData = snapshot.data.documents;
           enrolledData.forEach((element) {
@@ -66,15 +76,15 @@ Widget competitionStream(User user) {
               return Scaffold(
                 body: Center(child: CircularProgressIndicator()),
               );
-            } //else if (snapshot.hasError) {
-            // print(snapshot.error);
-            // return Scaffold(
-            //   body: Center(
-            //   child: NetworkErrorWidget(),
-            // ),
-            //  );
-            //  }
-            List<DocumentSnapshot> data = snapshot.data.documents;
+            } else if (snapshot.hasError) {
+              print(snapshot.error);
+              return Scaffold(
+                body: Center(
+                  child: NetworkErrorWidget(),
+                ),
+              );
+            }
+            List<DocumentSnapshot> data = snapshot.data.docs;
             //List<DocumentSnapshot> data = snapshot.data;
             bool con = data.every((element) =>
                 competitionIds.contains(element.data()["competitionId"]));
@@ -111,66 +121,72 @@ class CompetitionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (dataModel.start.compareTo(Timestamp.now()) <= 0) {
+        /*   if (dataModel.start.compareTo(Timestamp.now()) <= 0) {
           if (!DurationMethods.allowUsertoCompete(
               dataModel.end, dataModel.duration)) {
             Toast.show('You can\'t participate due to the time left', context,
                 gravity: Toast.LENGTH_LONG);
             return;
-          }
-          Navigator.of(context).pushReplacement(CupertinoPageRoute(
-              builder: (_) => CompetitionStartConfirmation(dataModel)));
-          showCupertinoDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (_) => CupertinoAlertDialog(
-                    content: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 28.0, horizontal: 5),
-                          child: CountdownTimer(
-                            controller: CountdownTimerController(
-                                endTime: this
-                                    .dataModel
-                                    .start
-                                    .millisecondsSinceEpoch),
-                            widgetBuilder: (_, time) {
-                              if (time == null) {
-                                return Text("Competition has started already!");
-                              }
-                              return Row(
-                                children: [
-                                  Visibility(
-                                      visible: true,
-                                      child: TimeBlock(
-                                          main: time.days ?? 0,
-                                          subText: "Days")),
-                                  TimeBlock(
-                                      main: time.hours ?? 0, subText: "Hrs"),
-                                  TimeBlock(
-                                      main: time.min ?? 0, subText: "Mins"),
-                                  TimeBlock(
-                                      main: time.sec ?? 0, subText: "Sec"),
-                                  Text(
-                                    "Till competition starts",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w300,
-                                    ),
+          } */
+        Navigator.of(context).pushReplacement(CupertinoPageRoute(
+            builder: (_) => CompetitionStartConfirmation(dataModel)));
+        showCupertinoDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (_) => CupertinoAlertDialog(
+                  content: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 28.0, horizontal: 5),
+                        child: CountdownTimer(
+                          controller: CountdownTimerController(
+                              endTime:
+                                  this.dataModel.start.millisecondsSinceEpoch),
+                          widgetBuilder: (_, time) {
+                            if (time == null) {
+                              return Text("Competition has started already!");
+                            }
+                            return Column(
+                              children: [
+                                Text(
+                                  "Till competition starts",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w300,
                                   ),
-                                ],
-                              );
-                            },
-                          ),
+                                ),
+                                Row(
+                                  children: [
+                                    Visibility(
+                                        visible: true,
+                                        child: TimeBlock(
+                                            main: time.days ?? 0,
+                                            subText: "Days")),
+                                    TimeBlock(
+                                        main:
+                                            time == null ? 0 : time.hours ?? 0,
+                                        subText: "Hrs"),
+                                    TimeBlock(
+                                        main: time == null ? 0 : time.min ?? 0,
+                                        subText: "Mins"),
+                                    TimeBlock(
+                                        main: time == null ? 0 : time.sec ?? 0,
+                                        subText: "Sec"),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                      ],
-                    ),
-                    insetAnimationDuration: Duration(milliseconds: 200),
-                  ));
-        } else {
-          //when current time exceeds start time
-        }
+                      ),
+                    ],
+                  ),
+                  insetAnimationDuration: Duration(milliseconds: 200),
+                ));
+        //    } else {
+        //when current time exceeds start time
+        // }
       },
       child: Container(
         decoration: BoxDecoration(

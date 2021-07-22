@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class CloudFirestoreServices {
   static Stream<QuerySnapshot> getCompetitionStream() async* {
     yield* FirebaseFirestore.instance
-        .collection('competitions ')
+        .collection('competitions')
         .where("end", isGreaterThan: Timestamp.now())
         .snapshots(includeMetadataChanges: true);
   }
@@ -18,8 +18,15 @@ class CloudFirestoreServices {
 
   static Stream<DocumentSnapshot> getCompetitionStream2(String id) async* {
     yield* FirebaseFirestore.instance
-        .collection('competitions ')
+        .collection('competitions')
         .doc(id)
+        .snapshots();
+  }
+
+  static Stream<QuerySnapshot> userStream(String userID) async* {
+    yield* FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: userID)
         .snapshots();
   }
 
@@ -39,7 +46,7 @@ class CloudFirestoreServices {
         .collection(ENROLMENTS)
         .where("userId", isEqualTo: user.uid)
         .where("end", isGreaterThan: Timestamp.now())
-        .snapshots();
+        .snapshots(includeMetadataChanges: true);
   }
 
   static Stream<QuerySnapshot> getCorrectAnswers(
@@ -49,7 +56,18 @@ class CloudFirestoreServices {
         .where("userId", isEqualTo: user.uid)
         .where('competitionId', isEqualTo: competitionId)
         .where("comEnd", isLessThan: Timestamp.now())
-        .snapshots();
+        .snapshots(includeMetadataChanges: true);
+  }
+
+  static Stream<QuerySnapshot> personalCourses(User user) async* {
+    yield* FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: user.uid)
+        .snapshots(includeMetadataChanges: true);
+  }
+
+  static Stream<QuerySnapshot> schoolCourses() async* {
+    yield* FirebaseFirestore.instance.collection('school_info').snapshots();
   }
 
   static Stream<QuerySnapshot> getHistoryStream(User user) async* {

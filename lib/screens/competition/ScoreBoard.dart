@@ -1,13 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamie/config/config.dart';
 import 'package:provider/provider.dart';
 import 'package:gamie/services/cloud_firestore_services.dart';
 import '../../Providers/authUserProvider.dart';
-import 'competitionHistory.dart';
-import '../../screens/homeScreenNavs/dashboard.dart';
 import '../../screens/homeScreen.dart';
+
+final list = <String>[];
+final newlist = <String>[];
 
 class ScoreBoard extends StatelessWidget {
   final competitionId;
@@ -20,10 +23,8 @@ class ScoreBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     final userAuth = Provider.of<UserAuthProvider>(context);
     return WillPopScope(
-      onWillPop: () {
-        Navigator.of(context).pushReplacement(
-            CupertinoPageRoute(builder: (context) => HomeScreen()));
-      },
+      onWillPop: () => Navigator.of(context).pushReplacement(
+          CupertinoPageRoute(builder: (context) => HomeScreen())),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -57,8 +58,13 @@ Widget rankingStream(String competitionId, UserAuthProvider userAuth) =>
           return Center(
             child: CircularProgressIndicator(),
           );
-        //else if(snapshot.hasError)
-        // return Text("there was an error, please try later", style: DISABLED_TEXT,);
+        else if (snapshot.hasError)
+          return Center(
+            child: Text(
+              "there was an error, please try later",
+              style: DISABLED_TEXT,
+            ),
+          );
 
         List<DocumentSnapshot> res = snapshot.data.docs;
         print(res.length);
@@ -76,23 +82,28 @@ Widget rankingStream(String competitionId, UserAuthProvider userAuth) =>
               Map<String, dynamic> document = res[index].data();
               final title = document["title"];
               final dateTaken = document["dateTaken"];
-              final score = document["score"];
+              final double score = document["score"];
               final total = document["documents"].length;
               final username = document["userName"];
               final userId = document['userId'];
               final rank = index + 1;
               final time = document["time"];
+              final id = document["userId"];
+              list.add(id);
 
+              //   list.contains(id) && !newlist.contains(id)
+              //     ?
               return HistoryCard(
-                isUser: userId == userAuth.authUser.uid,
-                title: title,
-                dateTaken: dateTaken,
-                score: score,
-                total: total,
-                username: username,
-                rank: rank,
-                time: time,
-              );
+                  isUser: userId == userAuth.authUser.uid,
+                  title: title,
+                  dateTaken: dateTaken,
+                  score: score,
+                  total: total,
+                  username: username,
+                  rank: rank,
+                  time: time,
+                  id: id);
+              // : SizedBox.shrink();
             },
           ),
         );
@@ -103,27 +114,32 @@ class HistoryCard extends StatelessWidget {
   final String title;
   final Timestamp dateTaken;
   final bool isUser;
-  final score;
+  final double score;
   final total;
   final competitionId;
   final username;
   final rank;
   final int time;
-  const HistoryCard({
-    Key key,
-    this.isUser,
-    this.title,
-    this.dateTaken,
-    this.score,
-    this.total,
-    this.competitionId,
-    this.username,
-    this.rank,
-    this.time,
-  }) : super(key: key);
+  final id;
+
+  const HistoryCard(
+      {Key key,
+      this.isUser,
+      this.title,
+      this.dateTaken,
+      this.score,
+      this.total,
+      this.competitionId,
+      this.username,
+      this.rank,
+      this.time,
+      this.id})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // if (list.contains(id)) newlist.add(id);
+
     // print(time);
     final DateTime date = dateTaken.toDate();
     final month = date.month;
@@ -132,6 +148,8 @@ class HistoryCard extends StatelessWidget {
     final hour = date.hour;
     final min = date.minute;
     final timeSpent = DateTime.fromMillisecondsSinceEpoch(time);
+    final intscore = score.toInt();
+
     // print(timeSpent.hour);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 2),
@@ -141,7 +159,7 @@ class HistoryCard extends StatelessWidget {
             color: isUser ? Colors.lightBlue : APP_BAR_COLOR,
             borderRadius: BorderRadius.all(Radius.circular(10.0))),
         child: Row(
-//          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 0, 20, 0),
@@ -156,9 +174,37 @@ class HistoryCard extends StatelessWidget {
             Center(
               child: Column(
                 children: [
-                  Text(
-                    "$username",
-                    style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,
+                  Row(
+                    children: [
+                      isUser
+                          ? FirebaseAuth.instance.currentUser.photoURL == null
+                              ? Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: Image.asset(
+                                    USER_PROFILE_PIC,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  backgroundImage: CachedNetworkImageProvider(
+                                      FirebaseAuth
+                                          .instance.currentUser.photoURL),
+                                )
+                          : SizedBox.shrink(),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        "$username",
+                        style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      )
+                    ],
                   ),
                   Padding(
                     padding:
@@ -167,7 +213,10 @@ class HistoryCard extends StatelessWidget {
                         style: MEDIUM_DISABLED_TEXT),
                   ),
                   Text(
-                      "Score: ${(100 * score / total).round()}%  |  time: ${timeSpent.minute ?? '0'}mins ${timeSpent.second ?? '0'}sec",
+                      "Score: $intscore" +
+                          "/" +
+                          "$total" +
+                          "  |  time: ${timeSpent.minute ?? '0'}mins ${timeSpent.second ?? '0'}sec",
                       style: MEDIUM_DISABLED_TEXT),
                 ],
               ),

@@ -1,15 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamie/Methods/saveImageTodisk.dart';
+import 'package:gamie/Providers/first_lunch.dart';
 import 'package:gamie/models/google_auth.dart';
 import 'package:gamie/reuseable/components.dart';
 import 'package:gamie/screens/auth/login.dart';
 import 'package:gamie/screens/auth/registerScreen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import '../../Providers/authUserProvider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+//import '../../Providers/authUserProvider.dart';
 import 'package:toast/toast.dart';
 import '../homeScreen.dart';
 import '../../config/config.dart';
@@ -54,7 +58,7 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
     final deviceSize = MediaQuery.of(context).size;
     //tweaked widgetHeight value
     final double widgetHeight = 0.08 * deviceSize.height;
-    final auth = Provider.of<UserAuthProvider>(context);
+    //  final auth = Provider.of<UserAuthProvider>(context);
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -91,13 +95,40 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          CustomRoundedButton(
+                          /* CustomRoundedButton(
                             onTap: () async {
-                              signInWithGoogle().then((value) {
+                              signInWithGoogle().then((value) async {
                                 if (value.user != null) {
                                   auth.setAuthUser = value.user;
                                   Navigator.pushNamedAndRemoveUntil(context,
                                       HomeScreen.routeName, (route) => false);
+                                  if (value.additionalUserInfo.isNewUser) {
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    Map<String, dynamic> data =
+                                        await jsonDecode(
+                                      prefs.get(PREFS_PERSONAL_INFO),
+                                    );
+
+                                    data["uid"] = value.user.uid;
+                                    data["full_name"] = value.user.displayName;
+                                    data["phone_number"] = '';
+                                    data["email_address"] = value.user.email;
+                                    data["photURL"] = value.user.photoURL;
+                                    data["address"] = '';
+                                    data["school"] = '';
+                                    data['courses'] = [];
+                                    prefs.setString(
+                                        PREFS_PERSONAL_INFO, jsonEncode(data));
+                                    FirebaseFirestore.instance
+                                        .collection('users')
+                                        .add(data)
+                                        .then((value) {
+                                      data["userid"] = value.id;
+                                      prefs.setString(PREFS_PERSONAL_INFO,
+                                          jsonEncode(data));
+                                    });
+                                  }
                                 } else {
                                   Toast.show('Error Signing in!', context,
                                       duration: Toast.LENGTH_LONG);
@@ -113,7 +144,7 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
                             color: ASH_BUTTON_COLOR,
                             text: "Continue with Google",
                           ),
-                          SizedBox(height: 40),
+                          SizedBox(height: 45), */
                           CustomRoundedButton(
                               height: widgetHeight,
                               onTap: () {
@@ -123,7 +154,7 @@ class _GettingStartedScreenState extends State<GettingStartedScreen> {
                               radius: 20.0,
                               textColor: Colors.white,
                               color: APP_BAR_COLOR,
-                              text: "Sign up with Email"),
+                              text: "Sign up Now"),
                           Padding(
                             padding: const EdgeInsets.only(top: 58.0),
                             child: Row(

@@ -22,9 +22,7 @@ class UserAuthStateWatch extends StatelessWidget {
     return Builder(builder: (
       BuildContext context,
     ) {
-      return userAuthData.authUser != null
-          ? HomeScreen()
-          : GettingStartedScreen();
+      return userAuthData.authUser != null ? MyClass() : GettingStartedScreen();
     });
   }
 }
