@@ -51,6 +51,5 @@
             android:value="2" />
         
     </application>
-    <uses-permission 
-        android:name="com.android.vending.BILLING" />
+    
 </manifest>

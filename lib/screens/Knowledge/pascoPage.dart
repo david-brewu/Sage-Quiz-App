@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamie/config/config.dart';
-import 'package:gamie/screens/Knowledge/PastQuestionsScreen.dart';
 import 'package:gamie/screens/Knowledge/pass_question_pdf.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';

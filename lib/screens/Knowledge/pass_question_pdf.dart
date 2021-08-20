@@ -18,9 +18,7 @@ class _PDFDocState extends State<PDFDoc> {
   bool _isLoading = true;
   PDFDocument document;
   bool error = false;
-  //final Reference reference =  FirebaseStorage.instance
-  //    .ref('pass_questions/' widget.course + '/' + materialType)
-
+ 
   @override
   void initState() {
     super.initState();

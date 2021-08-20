@@ -29,7 +29,6 @@ class CompetitionStartConfirmation extends StatefulWidget {
 
 class _CompetitionStartConfirmationState
     extends State<CompetitionStartConfirmation> {
-  // bool hasStarted;
   void _unEnrollUser(context) {
     FirebaseFirestore.instance
         .collection("enrolments")

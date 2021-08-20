@@ -23,8 +23,6 @@ import 'package:the_validator/the_validator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 
-import '../../Providers/edit_profile_provider.dart';
-
 // ignore: must_be_immutable
 class PersonalInfo extends StatefulWidget {
   static String routeName = "profile_Info";
@@ -43,14 +41,6 @@ class PersonalInfo extends StatefulWidget {
 
 class _PersonalInfoState extends State<PersonalInfo>
     with SingleTickerProviderStateMixin {
-  //final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  /*  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  } */
-
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<UserAuthProvider>(context).authUser ??
@@ -68,7 +58,6 @@ class _PersonalInfoState extends State<PersonalInfo>
 Widget userStream(String id, GlobalKey<FormState> formKey, String docID) {
   return StreamBuilder(
       stream: CloudFirestoreServices.userStream(id),
-      //stream: FirebaseFirestore.instance.collection("competitions").snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -132,7 +121,6 @@ class _ProfileBuilderState extends State<ProfileBuilder>
   String emailAdd = '';
   String school = '';
   bool _isbusy;
-  bool _photoDone;
   final picker = ImagePicker();
   File _imageFile;
   bool isPicked;
@@ -163,7 +151,6 @@ class _ProfileBuilderState extends State<ProfileBuilder>
     Tab(
       text: "Personal Info",
     ),
-    //  Tab(text: "Activities")
   ];
 
   Future pickImage() async {
@@ -195,7 +182,6 @@ class _ProfileBuilderState extends State<ProfileBuilder>
     data['address'] = _addressController;
     data['school'] = _schoolController;
     await user.updateEmail(_emailController.toString());
-    //  .whenComplete(() => print('am there'));
   }
 
   void _updateInfo(BuildContext context1) async {
@@ -217,22 +203,6 @@ class _ProfileBuilderState extends State<ProfileBuilder>
           .doc(widget.docID)
           .update({'school': _schoolController.text});
       FirebaseAuth.instance.currentUser.updateEmail(_emailController.text);
-      /*  SharedPreferences prefs = await SharedPreferences.getInstance();
-      Map<String, dynamic> data = await jsonDecode(
-        prefs.get(PREFS_PERSONAL_INFO),
-      );
-      print(addre);
-      print(emailAdd);
-      print(phoneNumber);
-      data["phone_number"] = phoneNumber;
-
-      data["email_address"] = emailAdd == '' ? data["email_address"] : emailAdd;
-      data['address'] = addre;
-      user.updateEmail(emailAdd == '' ? data["email_address"] : emailAdd);
-       prefs.setString(PREFS_PERSONAL_INFO, jsonEncode(data));
- */
-
-      // TODO: update user here and then show snack thats its done
 
       ScaffoldMessenger.of(context1).showSnackBar(SnackBar(
         backgroundColor: Colors.black,
@@ -262,16 +232,12 @@ class _ProfileBuilderState extends State<ProfileBuilder>
         Icons.warning, 'Please fill all the required fields', Colors.red, 3));
   }
 
- 
-
   @override
   void initState() {
-  
     _tabController = TabController(length: 1, vsync: this);
     isPicked = false;
     editProfile = false;
     _isbusy = false;
-    _photoDone = false;
 
     _emailController = TextEditingController(text: widget.model.email);
     _phoneController = TextEditingController(text: widget.model.phoneNumber);
@@ -356,7 +322,6 @@ class _ProfileBuilderState extends State<ProfileBuilder>
                     iconSize: 30,
                     onPressed: () async {
                       setState(() {
-                        // editProfile = true;
                         _isbusy = true;
                       });
 
@@ -385,7 +350,6 @@ class _ProfileBuilderState extends State<ProfileBuilder>
           : IconButton(
               onPressed: () async {
                 await pickImage();
-                //  uploadImageToFirebase(context);
               },
               icon: Icon(Icons.add_a_photo),
               iconSize: 30,
@@ -435,7 +399,6 @@ class _ProfileBuilderState extends State<ProfileBuilder>
                 height: 20,
               ),
               TextFormField(
-                //  initialValue: widget.model.email,
                 validator: (value) {
                   emailAdd = value;
                   if (!Validator.isEmail(value)) {
@@ -443,7 +406,6 @@ class _ProfileBuilderState extends State<ProfileBuilder>
                   }
                   return null;
                 },
-
                 style: MEDIUM_DISABLED_TEXT,
                 controller: _emailController,
                 enabled: editProfile,
@@ -460,9 +422,7 @@ class _ProfileBuilderState extends State<ProfileBuilder>
                 height: 10,
               ),
               TextFormField(
-                //  initialValue: widget.model.phoneNumber,
                 textAlign: TextAlign.center,
-
                 validator: (value) {
                   phoneNumber = value;
                   if (value.length < 10) {
@@ -483,12 +443,10 @@ class _ProfileBuilderState extends State<ProfileBuilder>
                 height: 10,
               ),
               TextFormField(
-                //initialValue: widget.model.address,
                 style: MEDIUM_DISABLED_TEXT,
                 controller: _schoolController,
                 enabled: editProfile,
                 textAlign: TextAlign.center,
-
                 decoration: InputDecoration(
                     icon: Text(
                   "SCHOOL: ",
@@ -499,12 +457,10 @@ class _ProfileBuilderState extends State<ProfileBuilder>
                 height: 10,
               ),
               TextFormField(
-                //initialValue: widget.model.address,
                 style: MEDIUM_DISABLED_TEXT,
                 controller: _addressController,
                 enabled: editProfile,
                 textAlign: TextAlign.center,
-
                 decoration: InputDecoration(
                     icon: Text(
                   "ADDRESS: ",
@@ -526,27 +482,23 @@ class _ProfileBuilderState extends State<ProfileBuilder>
                               style: NORMAL_WHITE_BUTTON_LABEL),
                           onPressed: () {
                             _updateInfo(context);
-                            setState(() {
-                              //   editProfile = false;
-                            });
+                            setState(() {});
                           },
                         )
                       : SizedBox.shrink(),
-                  // ignore: deprecated_member_use
+
                   editProfile
                       ? FlatButton(
                           disabledColor: Colors.red.withOpacity(0.5),
                           color: Colors.red,
                           child:
                               Text('CANCEL', style: NORMAL_WHITE_BUTTON_LABEL),
-                          //onPressed: edit.edit != null ? _cancelUpdate : null,
                           onPressed: () {
                             setState(() {
                               _emailController.text = widget.model.email;
                               _phoneController.text = widget.model.phoneNumber;
                               _addressController.text = widget.model.address;
                               editProfile = false;
-                              _photoDone = false;
                             });
                           },
                         )
@@ -555,7 +507,6 @@ class _ProfileBuilderState extends State<ProfileBuilder>
                           color: APP_BAR_COLOR,
                           child: Text("Edit Info",
                               style: NORMAL_WHITE_BUTTON_LABEL),
-                          //onPressed: edit.edit != null ? _cancelUpdate : null,
                           onPressed: () {
                             setState(() {
                               editProfile = true;

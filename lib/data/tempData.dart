@@ -16,4 +16,3 @@ class PaymentMethodData {
 
 }
 
-//List<PaymentMethodData> paymentMethodData = [];

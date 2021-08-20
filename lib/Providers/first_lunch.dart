@@ -33,7 +33,6 @@ class FirstLaunchSharedPreference {
   static Future<bool> getNotiStatus() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     bool notiStatus = preferences.getBool('notification');
-    // print(notiStatus.toString() + '  subscribed');
     return notiStatus;
   }
 }

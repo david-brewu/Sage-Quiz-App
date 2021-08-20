@@ -1,19 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
-/* abstract class BaseAuth {
-  Future<String> signIn(String email, String password);
 
-  Future<String> signUp(String email, String password);
-
-  Future<FirebaseUser> getCurrentUser();
-
-  Future<void> sendEmailVerification();
-
-  Future<void> signOut();
-
-  Future<bool> isEmailVerified();
-} */
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -30,11 +18,7 @@ class Auth {
     UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
 
-    /*  Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home(user: user)));
-      } catch (e) {
-        print(e.message);
-      } */
+   
 
     User user = result.user;
     return user.uid;

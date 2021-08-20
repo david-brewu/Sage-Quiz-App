@@ -23,8 +23,7 @@ class _InviteScreenState extends State<InviteScreen> {
   }
 
   void _invite(BuildContext context) async {
-    // print(_emailForm.currentState);
-    // return;
+    
     if (_emailForm.currentState.validate()) {
       if (!inviteSent) {
         // hasen't sent invite

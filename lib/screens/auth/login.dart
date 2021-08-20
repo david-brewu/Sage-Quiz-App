@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:gamie/config/config.dart';
 import 'package:gamie/models/user_model.dart';
 import 'package:gamie/reuseable/components.dart';
-import 'package:gamie/reuseable/drawer.dart';
 import 'package:gamie/screens/auth/registerScreen.dart';
 import 'package:gamie/services/cloud_firestore_services.dart';
 import 'package:loading_animations/loading_animations.dart';
@@ -20,11 +19,8 @@ import '../homeScreen.dart';
 import 'reset_password_screens/emailEntry.dart';
 
 Widget getUser(User user) {
-  //SharedPreferences prefs = await SharedPreferences.getInstance();
-  // print('begin');
   return StreamBuilder(
       stream: CloudFirestoreServices.userStream(user.uid),
-      //stream: FirebaseFirestore.instance.collection("competitions").snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -35,8 +31,6 @@ Widget getUser(User user) {
         }
         if (snapshot.hasData) {
           List<DocumentSnapshot> data = snapshot.data.docs;
-          //  print(data.length);
-          //  print(data.toString());
 
           if (data.length == 0) print('no data');
           return saveDoc(UserDataModel.fromMap(data[0], 0), prefs);
@@ -46,7 +40,6 @@ Widget getUser(User user) {
 }
 
 Widget saveDoc(UserDataModel model, SharedPreferences prefs) {
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
   Map<String, dynamic> userData = {};
 
   userData['userid'] = model.id;
@@ -126,7 +119,6 @@ class _LoginScreenState extends State<LoginScreen> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              // return object of type Dialog
               return AlertDialog(
                 title: new Text("Confirm Email"),
                 content: new Text(
@@ -226,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Positioned.fill(child: CustomBackground()),
               Positioned.fill(
                 child: Container(
-                  // color: MAIN_BACK_COLOR,
+                
                   child: SingleChildScrollView(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -276,30 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(
                             height: widgetHeight,
                           ),
-                          /*  CustomRoundedButton(
-                            onTap: () async {
-                              signInWithGoogle().then((value) {
-                                if (value.user != null) {
-                                  Provider.of<UserAuthProvider>(
-                                    context,
-                                  ).setAuthUser = value.user;
-                                  Navigator.pushNamedAndRemoveUntil(context,
-                                      HomeScreen.routeName, (route) => false);
-                                } else {
-                                  Toast.show('Error Signing in!', context,
-                                      duration: Toast.LENGTH_LONG);
-                                }
-                              }).catchError((err) {
-                                Toast.show('Error Signing in!', context,
-                                    duration: Toast.LENGTH_LONG);
-                              });
-                            },
-                            radius: 20.0,
-                            height: widgetHeight,
-                            image: GOOGLE_IMG,
-                            color: ASH_BUTTON_COLOR,
-                            text: "Sign in with Google",
-                          ), */
+
                           SizedBox(
                             height: 40,
                           ),
@@ -323,8 +292,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   autocorrect: false,
                                   onChanged: (val) {
                                     setState(() {
-                                      errorMessage =
-                                          ""; // clear any previous errors
+                                      errorMessage = "";
                                       email = val;
                                     });
                                   },
@@ -370,7 +338,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 InkWell(
-                                  //linked forgot password link to email entry page
                                   onTap: () => Navigator.of(context).push(
                                       CupertinoPageRoute(
                                           builder: (BuildContext context) =>

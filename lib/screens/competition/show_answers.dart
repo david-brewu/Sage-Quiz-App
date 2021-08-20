@@ -20,8 +20,6 @@ import '../../screens/homeScreen.dart';
 class ShowAnswer extends StatelessWidget {
   final String comID;
   ShowAnswer(this.comID);
-  //final Size deviceSize = MediaQuery.of(context).size;
-  //var b;
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +35,11 @@ class ShowAnswer extends StatelessWidget {
             RaisedButton(
               padding: EdgeInsets.only(top: 5),
               color: Colors.black,
-              onPressed: () => Navigator.of(context).pushReplacement(
-                  CupertinoPageRoute(builder: (context) => ScoreBoard(comID, ))),
+              onPressed: () =>
+                  Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                      builder: (context) => ScoreBoard(
+                            comID,
+                          ))),
               child: Text('Go to rankings',
                   style: TextStyle(
                       color: Colors.white,

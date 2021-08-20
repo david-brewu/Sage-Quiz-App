@@ -10,7 +10,6 @@ class UserDataModel {
   String uid;
   String school;
   List courses;
-  // String docID;
 
   UserDataModel({
     this.fullName,
@@ -34,6 +33,5 @@ class UserDataModel {
     this.uid = data.data()["uid"];
     this.school = data.data()["school"];
     this.courses = data.data()['courses'];
-    //  this.courses = data.data()['courses'];
   }
 }

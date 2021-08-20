@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:gamie/config/config.dart';
 import 'package:gamie/models/user_model.dart';
 import 'package:gamie/screens/homeScreenNavs/semester_folders.dart';
-import 'package:gamie/screens/homeScreenNavs/course_materials.dart';
 import 'package:gamie/services/cloud_firestore_services.dart';
 import '../../reuseable/no_connectivity_widget.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +29,6 @@ var items = List<String>();
 class _LearningNavState extends State<LearningNav> {
   final TextEditingController editingController = TextEditingController();
 
-  //List<CourseModel> courseList = CourseModel.fromMap(data, index)
   int index;
   @override
   Widget build(BuildContext context) {
@@ -40,25 +38,7 @@ class _LearningNavState extends State<LearningNav> {
     return SafeArea(
         child: Scaffold(
       body: networkProvider.connectionStatus
-          ? /* Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    filterSearchResults(data[index].id);
-                  },
-                  controller: editingController,
-                  decoration: InputDecoration(
-                      labelText: "Browse courses",
-                      hintText: "Search",
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(25.0)))),
-                ),
-              ), */
-          coursesStream(user)
+          ? coursesStream(user)
           : Center(child: NoConnectivityWidget()),
     ));
   }
@@ -67,7 +47,7 @@ class _LearningNavState extends State<LearningNav> {
     String query,
   ) {
     List<String> dummySearchList = <String>[];
-    //dummySearchList.addAll(data.);
+
     if (query.isNotEmpty) {
       List<String> dummyListData = <String>[];
       dummySearchList.forEach((item) {
@@ -89,10 +69,7 @@ class _LearningNavState extends State<LearningNav> {
   }
 }
 
-//User user;
 Widget coursesStream(User user) {
-  // List<DocumentSnapshot> data;
-  //final TextEditingController editingController = TextEditingController();
   var enrolledIds = <String>[];
   return StreamBuilder(
       stream: CloudFirestoreServices.personalCourses(user),
@@ -150,11 +127,6 @@ class BuildCourseList extends StatelessWidget {
                       builder: (context) => SemesterFolders(
                             userData.courses[index],
                           )));
-                  /* Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => CoursePage(dataModel),
-                )); */
                 },
                 title: Text(
                   userData.courses[index],
@@ -196,9 +168,7 @@ class CoursePage extends StatelessWidget {
                         context,
                         CupertinoPageRoute(
                           builder: (context) => LectureNotes(
-                            //  model: model,
                             materialType: 'lecture_slides',
-
                             imagePath: 'assets/images/lecturenotes.jpg',
                           ),
                         ));
@@ -232,9 +202,7 @@ class CoursePage extends StatelessWidget {
                         context,
                         CupertinoPageRoute(
                           builder: (context) => LectureNotes(
-                            //      model: model,
                             materialType: 'course_books',
-
                             imagePath: 'assets/images/bookicon.png',
                           ),
                         ));
@@ -250,9 +218,7 @@ class CoursePage extends StatelessWidget {
                       context,
                       CupertinoPageRoute(
                         builder: (context) => LectureNotes(
-                          //    model: model,
                           materialType: 'sample_questions',
-
                           imagePath: 'assets/images/questionsicon.png',
                         ),
                       ));

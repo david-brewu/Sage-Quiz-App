@@ -70,26 +70,9 @@ class _CompetitionHistoryState extends State<CompetitionHistory> {
                   final competitionId = document["competitionId"];
                   final id = document['userId'];
                   hisList.add(id);
-                  /*   for (int i = 0; i <= index; i++) {
-                    print(docs[index].data()['userId'].toString().characters);
-                    if (docs[index]
-                        .data()['userId']
-                        .toString()
-                        .characters
-                        .contains(
-                            docs[i].data()['userid'].toString().characters)) {
-                      print(true);
-                      setState(() {
-                        hasOccur = false;
-                      });
-                    }
-                  } */
+                 
                   return
-                      //hasOccur
-                      //    ?
-
-                      //    hisList.contains(id) && !newHisList.contains(id)
-                      //      ?
+                     
                       HistoryCard(
                     title: title,
                     dateTaken: dateTaken,
@@ -98,8 +81,7 @@ class _CompetitionHistoryState extends State<CompetitionHistory> {
                     competitionId: competitionId,
                     id: id,
                   );
-                  //    : SizedBox.shrink();
-                  //   : SizedBox.shrink();
+               
                 },
               );
             },

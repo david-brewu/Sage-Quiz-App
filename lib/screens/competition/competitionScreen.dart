@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,8 +10,6 @@ import 'package:gamie/screens/competition/competitionScoreScreen.dart';
 import '../../models/competition_data_model.dart';
 import '../../services/cloud_firestore_services.dart';
 import 'package:gamie/screens/homeScreen.dart';
-import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
-import 'package:timer_count_down/timer_count_down.dart';
 
 bool hasSubmit;
 
@@ -31,20 +27,6 @@ class CompetitionScreen1 extends StatefulWidget {
 }
 
 class _CompetitionScreen1State extends State<CompetitionScreen1> {
-  /* int time = 14;
-  Color _color = Colors.yellow;
-  CountdownTimerController cpontroller = CountdownTimerController(
-    onEnd: () {
-      __compScreenState.routeMe();
-    }, //routeMe(),
-    endTime: __compScreenState.widget.dataModel.end.millisecondsSinceEpoch,
-  );
-  @override
-  void setState(VoidCallback fn) {
-    time = 15;
-    _color = Colors.red;
-  }
-*/
   void initState() {
     // __compScreenState;
     super.initState();
@@ -64,9 +46,6 @@ class _CompetitionScreen1State extends State<CompetitionScreen1> {
             endTime: DateTime.now()
                 .add(Duration(seconds: widget.dataModel.duration.inSeconds))
                 .millisecondsSinceEpoch,
-            // DateTime.now()
-            //   .add(Duration(seconds: time))
-            // .millisecondsSinceEpoch,
           ),
           widgetBuilder: (_, time) => Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -139,7 +118,6 @@ class CompetitionScreen extends StatefulWidget {
   CompetitionScreen({this.dataModel, this.user});
 
   @override
-  //_CompetitionScreenState createState() => _CompetitionScreenState();
   _CompetitionScreenState createState() {
     __compScreenState = _CompetitionScreenState();
     return __compScreenState;
@@ -152,12 +130,10 @@ int sec = 0;
 class _CompetitionScreenState extends State<CompetitionScreen> {
   int _current = 0;
   int startTime = Timestamp.now().millisecondsSinceEpoch;
-  // bool hasSubmit;
-  // ignore: unused_element
+
   _showDialog() async {
     return showDialog(
         context: context,
-        // child: Container(),
         builder: (context) => AlertDialog(
               title: Text("Are you sure you want to submit?"),
               actions: <Widget>[
@@ -190,11 +166,6 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
     Navigator.of(context).pop();
     _navigateToCompetitionScore();
   }
-/* 
-  @override
-  void dispose() {
-    super.dispose();
-  } */
 
   _onWillPop() async {
     return showDialog(
@@ -229,35 +200,6 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
 
   int giveTime(int time) {
     return time;
-  }
-
-  int _stream() {
-    int duuu;
-    StreamBuilder(
-        stream:
-            CloudFirestoreServices.getCompetitionStream2(widget.dataModel.id),
-        // ignore: missing_return
-        builder: (
-          context,
-          snapshot,
-        ) {
-          List<DocumentSnapshot> needed = snapshot.data.docuements;
-          if (needed != null) {
-            try {
-              var b = CompetitionDataModel.fromMap(needed[0], 0);
-              int duuu = DateTime.now()
-                  .add(Duration(minutes: b.duration.inMinutes))
-                  .millisecondsSinceEpoch;
-              print('myduu is');
-              print(duuu);
-            } catch (e) {
-              return null;
-            }
-          } else {
-            print('I found nothing');
-          }
-        });
-    return duuu;
   }
 
   void onTapped(String e, String answer) {
@@ -340,7 +282,6 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
             builder: (context) =>
                 CompetitionScoreScreen(score, widget.dataModel)),
         (route) => false);
-//    dispose();
   }
 
   void routeMe() {
@@ -350,7 +291,6 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
   void _onNextTapped() {
     print(trackPrevious);
     print(scores);
-    //endOfQuestion ? _showDialog() : null;
 
     if (_current == widget.dataModel.documents.length - 1) {
       _showDialog();
@@ -396,71 +336,6 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
     return WillPopScope(
         onWillPop: () => _onWillPop(),
         child: Scaffold(
-          //appBar: myAppBar(),
-
-          /* appBar: AppBar(
-            title: Text(
-              widget.dataModel.title,
-              style: APP_BAR_TEXTSTYLE,
-            ),
-            backgroundColor: APP_BAR_COLOR,
-            bottom: PreferredSize(
-                child: CountdownTimer(
-                  controller: CountdownTimerController(
-                    onEnd: () {
-                      setState(() {});
-                      __compScreenState.routeMe();
-                    }, //routeMe(),
-                    endTime: DateTime.now()
-                        .add(Duration(
-                            seconds: widget.dataModel.duration.inSeconds))
-                        .millisecondsSinceEpoch,
-                  ),
-                  widgetBuilder: (_, time) => Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          "Time left",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                                "${time == null || time.min == null ? '0' : time.min}",
-                                // '0',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
-                                    color: time == null ||
-                                            time.min == null ||
-                                            time.min < 5
-                                        ? Colors.red
-                                        : Colors.white,
-                                    fontFamily: "Montserrat")),
-                            Text(":", style: MEDIUM_WHITE_BUTTON_TEXT_BOLD),
-                            Text(
-                                "${time == null || time.sec == null ? '0' : time.sec}",
-                                // '15',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
-                                    color: time == null ||
-                                            time.min == null ||
-                                            time.min < 5
-                                        ? Colors.red
-                                        : Colors.white,
-                                    fontFamily: "Montserrat")),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                preferredSize: Size(deviceSize.width, 50)),
-          ), */
-
           body: Container(
             child: Stack(
               children: <Widget>[
@@ -502,8 +377,27 @@ class _CompetitionScreenState extends State<CompetitionScreen> {
                     height: 55,
                     width: deviceSize.width,
                     child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          PageControls(
+                            children: [
+                              Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Previous",
+                                style: NORMAL_WHITE_BUTTON_LABEL,
+                              ),
+                            ],
+                            alignment: MainAxisAlignment.start,
+                            devSize: deviceSize,
+                            buttonColor: Colors.red,
+                            onTap: () => _onPreviousTapped(),
+                          ),
                           PageControls(
                             buttonColor: Colors.green,
                             children: [
@@ -642,10 +536,7 @@ class AnswerCard extends StatelessWidget {
       child: InkWell(
         onTap: onAnswerTapped,
         child: Container(
-          //width: 3270,
-          //height: 120,
           width: devSize.width,
-          // height: 60,
           decoration: BoxDecoration(
               color: isChecked ? APP_BAR_COLOR : Colors.white,
               borderRadius: BorderRadius.circular(10),

@@ -16,8 +16,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool soundOn = false;
-  //bool notificationsOn = true;
-  // SharedPreferences preferences;
+
   bool notiStatus;
 
   void initState() {
@@ -120,10 +119,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     });
                                     Navigator.of(context).pop();
                                     _SettingsScreenState();
-                                    /* Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                SettingsScreen())); */
                                   },
                                 ),
                                 // ignore: deprecated_member_use

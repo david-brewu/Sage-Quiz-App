@@ -37,7 +37,6 @@ class ScoreBoard extends StatelessWidget {
               Navigator.of(context).pushReplacement(
                   CupertinoPageRoute(builder: (context) => HomeScreen()));
             },
-            //  DashboardNav(),
             padding: EdgeInsets.all(0),
             iconSize: 45,
             icon: Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -91,8 +90,6 @@ Widget rankingStream(String competitionId, UserAuthProvider userAuth) =>
               final id = document["userId"];
               list.add(id);
 
-              //   list.contains(id) && !newlist.contains(id)
-              //     ?
               return HistoryCard(
                   isUser: userId == userAuth.authUser.uid,
                   title: title,
@@ -103,7 +100,6 @@ Widget rankingStream(String competitionId, UserAuthProvider userAuth) =>
                   rank: rank,
                   time: time,
                   id: id);
-              // : SizedBox.shrink();
             },
           ),
         );
@@ -138,9 +134,6 @@ class HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if (list.contains(id)) newlist.add(id);
-
-    // print(time);
     final DateTime date = dateTaken.toDate();
     final month = date.month;
     final day = date.day;

@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:gamie/config/config.dart';
-import 'package:gamie/screens/competition/competitionScoreScreen.dart';
 import '../../models/results_data_model.dart';
 
 class CorrectAnswers extends StatefulWidget {
@@ -21,51 +18,34 @@ class CorrectAnswers extends StatefulWidget {
 class _CorrectAnswers extends State<CorrectAnswers> {
   int _current = 0;
   List<String> _letters = ["A", "B", "C", "D"];
-  //int startTime = Timestamp.now().millisecondsSinceEpoch;
 
   void _onNextTapped() {
-    //  print(trackPrevious);
-    //  print(scores);
-    //endOfQuestion ? _showDialog() : null;
-
     if (_current == widget.dataModel.documents.length - 1) {
-      // _navigateToCompetitionScore();
-      setState(() {
-        //  endOfQuestion = true;
-      });
+      setState(() {});
       return;
     }
     setState(() {
       _current++;
-      // resetUserAnswer();
-      // if (trackPrevious[_current] < 10) checked[trackPrevious[_current]] = true;
     });
   }
 
   void _onPreviousTapped() {
-    //  resetUserAnswer();
     if (_current == 0) {
       return;
     }
     setState(() {
       _current--;
-      //  if (trackPrevious[_current] < 10) checked[trackPrevious[_current]] = true;
-
-      //  endOfQuestion = false;
     });
   }
 
   Widget build(BuildContext context) {
     String competitionTitle = widget.dataModel.title;
-    //final int duration = widget.dataModel.duration.inMinutes;
-    //final dura =
-    //   DateTime.now().add(Duration(minutes: duration)).millisecondsSinceEpoch;
 
     int questionNumber = _current + 1;
     int _alt = 0;
     var alternatives = widget.dataModel.documents[_current]["alternatives"];
     var question = widget.dataModel.documents[_current]["question"];
-    // String answer = widget.dataModel.documents[_current]["answer"];
+
     final Size deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -74,39 +54,6 @@ class _CorrectAnswers extends State<CorrectAnswers> {
           style: APP_BAR_TEXTSTYLE,
         ),
         backgroundColor: APP_BAR_COLOR,
-        /* bottom: PreferredSize(
-            child: Container(
-                child: CountdownTimer(
-              // onEnd: _navigateToCompetitionScoreNull(),
-              //endTime: dura,
-              // endTime: DateTime.now()
-              //     .add(Duration(minutes: duration))
-              //     .millisecondsSinceEpoch,
-              widgetBuilder: (_, time) => Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      "Time left",
-                      style: MEDIUM_WHITE_BUTTON_TEXT_BOLD,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                            "${time == null || time.min == null ? '0' : time.min}",
-                            style: MEDIUM_WHITE_BUTTON_TEXT_BOLD),
-                        Text(":", style: MEDIUM_WHITE_BUTTON_TEXT_BOLD),
-                        Text(
-                            "${time == null || time.sec == null ? '0' : time.sec}",
-                            style: MEDIUM_WHITE_BUTTON_TEXT_BOLD),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            )), 
-            preferredSize: Size(deviceSize.width, 50)),*/
       ),
       body: Container(
         child: Stack(
@@ -128,12 +75,9 @@ class _CorrectAnswers extends State<CorrectAnswers> {
                     children: alternatives.map<Widget>((e) {
                       _alt++;
                       return AnswerCard(
-                        // color: Colors.black,
                         devSize: deviceSize,
-                        //isChecked: checked[_alt - 1],
                         letter: _letters[_alt - 1],
                         option: e,
-                        //onAnswerTapped: () => onTapped(e, answer),
                       );
                     }).toList(),
                   ),
@@ -275,10 +219,7 @@ class AnswerCard extends StatelessWidget {
       child: InkWell(
         onTap: onAnswerTapped,
         child: Container(
-          //width: 3270,
-          //height: 120,
           width: devSize.width,
-          // height: 60,
           decoration: BoxDecoration(
               color: isChecked ? APP_BAR_COLOR : Colors.white,
               borderRadius: BorderRadius.circular(10),

@@ -9,15 +9,12 @@ import 'package:gamie/Providers/authUserProvider.dart';
 import 'package:gamie/config/config.dart';
 import 'package:gamie/config/dbkeys.dart';
 import 'package:gamie/reuseable/network_error_widget.dart';
-import 'package:gamie/screens/auth/login.dart';
 import 'package:gamie/screens/competition/competitionStartConfirmation.dart';
 import 'package:provider/provider.dart';
-import 'package:toast/toast.dart';
 
 import '../../models/enrolment_data_model.dart';
 import '../../services/cloud_firestore_services.dart';
 import '../../Providers/network_provider.dart';
-import '../../utils/duration_methods.dart';
 import '../../reuseable/no_connectivity_widget.dart';
 import '../../reuseable/empty_items.dart';
 
@@ -45,7 +42,6 @@ Widget competitionStream(User user) {
   var competitionIds = <String>[];
   return StreamBuilder(
       stream: CloudFirestoreServices.getHistoryStream(user),
-      //stream: FirebaseFirestore.instance.collection('results').snapshots(),
       builder: (context, snapshot) {
         print('something');
         competitionIds = [];
@@ -69,7 +65,6 @@ Widget competitionStream(User user) {
           });
         }
         return StreamBuilder(
-          // stream:FirebaseFirestore.instance.collection('enrolments').snapshots(),
           stream: CloudFirestoreServices.getEnrolledStream(user),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -85,7 +80,7 @@ Widget competitionStream(User user) {
               );
             }
             List<DocumentSnapshot> data = snapshot.data.docs;
-            //List<DocumentSnapshot> data = snapshot.data;
+
             bool con = data.every((element) =>
                 competitionIds.contains(element.data()["competitionId"]));
             if (con)
@@ -121,13 +116,6 @@ class CompetitionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        /*   if (dataModel.start.compareTo(Timestamp.now()) <= 0) {
-          if (!DurationMethods.allowUsertoCompete(
-              dataModel.end, dataModel.duration)) {
-            Toast.show('You can\'t participate due to the time left', context,
-                gravity: Toast.LENGTH_LONG);
-            return;
-          } */
         Navigator.of(context).pushReplacement(CupertinoPageRoute(
             builder: (_) => CompetitionStartConfirmation(dataModel)));
         showCupertinoDialog(
@@ -184,9 +172,6 @@ class CompetitionCard extends StatelessWidget {
                   ),
                   insetAnimationDuration: Duration(milliseconds: 200),
                 ));
-        //    } else {
-        //when current time exceeds start time
-        // }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -194,7 +179,6 @@ class CompetitionCard extends StatelessWidget {
             borderRadius: BorderRadius.all(
               Radius.circular(10),
             ),
-            //backgroundBlendMode: BlendMode.color,
             boxShadow: [
               BoxShadow(
                   color: Colors.blueGrey, blurRadius: 1, spreadRadius: .1),

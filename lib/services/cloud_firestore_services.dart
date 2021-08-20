@@ -37,10 +37,6 @@ class CloudFirestoreServices {
     return documents;
   }
 
-  //static Stream<DocumentSnapshot> getCourses() async* {
-  //yield* FirebaseFirestore.instance.collection('courses ').doc().snapshots();
-  // }
-
   static Stream<QuerySnapshot> getEnrolledStream(User user) async* {
     yield* FirebaseFirestore.instance
         .collection(ENROLMENTS)

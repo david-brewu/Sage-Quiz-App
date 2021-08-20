@@ -43,7 +43,7 @@ class _CreditCardScreenState extends State<CreditCardScreen> {
           ));
   }
 
-  //add data
+  
   // ignore: non_constant_identifier_names
   void add_data_then_proceed() {
     //add data to temp data list
@@ -61,6 +61,8 @@ class _CreditCardScreenState extends State<CreditCardScreen> {
               //then navigate to next stp
               widget.nextStep()
             })
+        // ignore: deprecated_member_use
+        // ignore: invalid_return_type_for_catch_error
         .catchError((onError) => Scaffold.of(context).showSnackBar(
               SnackBar(
                 content: Text("There was an error"),

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,7 +18,7 @@ import '../reuseable/bottomNav.dart';
 import '../Providers/bottomNav_provider.dart';
 import 'package:connectivity_widget/connectivity_widget.dart';
 
-//import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+
 Map<String, dynamic> data1;
 SharedPreferences prefs;
 bool noti;
@@ -40,8 +39,7 @@ class _MyClassState extends State<MyClass> {
     preferences = await SharedPreferences.getInstance();
     noti = await FirstLaunchSharedPreference.getNotiStatus();
     prefs = await SharedPreferences.getInstance();
-    // await
-    // data = jsonDecode(prefs.getString(PREFS_PERSONAL_INFO));
+    
 
     super.setState(() {});
   }
@@ -57,7 +55,7 @@ class _MyClassState extends State<MyClass> {
   }
 }
 
-// ignore: must_be_immutable
+
 class HomeScreen extends StatefulWidget {
   static String routeName = "home_screen";
 
@@ -71,8 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
     preferences = await SharedPreferences.getInstance();
     noti = await FirstLaunchSharedPreference.getNotiStatus();
     prefs = await SharedPreferences.getInstance();
-    // await
-    // data = jsonDecode(prefs.getString(PREFS_PERSONAL_INFO));
+    
 
     super.setState(() {});
   }
@@ -118,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: APP_BAR_COLOR,
             ),
             drawer: CustomDrawer(),
-            // getUser(FirebaseAuth.instance.currentUser),
+           
             body: DoubleBackToCloseApp(
               snackBar:
                   const SnackBar(content: Text('Tab back again to leave app')),
@@ -126,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onlineCallback: () => net.setInternet = true,
                   offlineCallback: () => net.setInternet = false,
                   builder: (context, snapshot) {
-                    // print(snapshot);
+                   
                     return SafeArea(child: Consumer<BottomNavProvider>(
                         builder: (context, snapshot, widget) {
                       return _buildHome(snapshot.index);

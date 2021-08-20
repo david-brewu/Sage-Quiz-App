@@ -1,13 +1,11 @@
 import 'dart:convert';
 
-import 'package:gamie/payments/main_payments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:gamie/screens/auth/login.dart';
 import 'package:gamie/screens/profilePageWidgets/personalInfo.dart';
 import 'package:gamie/screens/user/user_course_management.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../config/config.dart';
@@ -22,12 +20,8 @@ import '../Providers/authUserProvider.dart';
 String mydocID;
 
 class CustomDrawer extends StatelessWidget {
-  //CustomDrawer(this.name, this.phone, this.address, this.photo, this.email);
   @override
   Widget build(BuildContext context) {
-    // String id;
-
-    // Map<String, dynamic> data;
     final user = Provider.of<UserAuthProvider>(context);
     return SafeArea(
       child: Theme(
@@ -127,29 +121,10 @@ class CustomDrawer extends StatelessWidget {
                       height: 0,
                     ),
                     ListTile(
-                      //linked all payments to only one payment screen
-                      onTap: () => Navigator.of(context).push(
-                          CupertinoPageRoute(
-                              builder: (BuildContext context) => Payments())),
-                      leading: Icon(
-                        Icons.attach_money,
-                        color: Colors.black,
-                      ),
-                      title: Text(
-                        "Payments",
-                        style: NORMAL_BLACK_BUTTON_TEXT,
-                      ),
-                    ),
-                    Divider(
-                      height: 0,
-                    ),
-                    ListTile(
                       onTap: () {
-                        // Navigator.pop(context);
-                        //Navigator.of(context).push(CupertinoPageRoute(
-                        //  builder: (context) => InviteScreen()));
                         final RenderBox box = context.findRenderObject();
-                        Share.share('text',
+                        Share.share(
+                            'https://play.google.com/store/apps/details?id=com.mat.nkudu',
                             subject: 'Check Out this Cool App',
                             sharePositionOrigin:
                                 box.localToGlobal(Offset.zero) & box.size);
@@ -188,9 +163,8 @@ class CustomDrawer extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () async {
-                        //removes drawer first then
                         Navigator.pop(context);
-                        //show dialog
+
                         _showAlertDialog(context);
                       },
                       leading: Icon(

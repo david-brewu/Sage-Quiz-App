@@ -19,27 +19,7 @@ class _EmailEntryState extends State<EmailEntry> {
   void _onProceed(BuildContext context) {
     if (_formKey.currentState.validate()) {
       _verysend();
-
-      //proceed to next screen
-      /* Navigator.of(context).push(CupertinoPageRoute(
-          builder: (BuildContext context) => EmailConfirmation()));
-      return; */
     }
-    /*  Scaffold.of(context).showSnackBar(SnackBar(
-      content: Row(
-        children: <Widget>[
-          Icon(
-            Icons.error,
-            color: Colors.red,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 6),
-          ),
-          Text("Please Enter a valid email address")
-        ],
-      ),
-      duration: Duration(milliseconds: 500),
-    )); */
   }
 
   @override

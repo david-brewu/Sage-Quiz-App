@@ -13,7 +13,7 @@ class VideoItems extends StatefulWidget {
 
   final bool looping;
   final bool autoplay;
-  //final Key key;
+ 
 
   VideoItems({
     @required this.videoPlayerController,
@@ -91,7 +91,7 @@ class _VideoScreenState extends State<VideoScreen> {
   }
 
   loadURL() async {
-    // string = await widget.reference.getDownloadURL();
+   
 
     return string;
   }
@@ -106,6 +106,7 @@ class _VideoScreenState extends State<VideoScreen> {
   Widget build(BuildContext context) {
     print(controllerPath);
     return WillPopScope(
+      // ignore: missing_return
       onWillPop: () {
         try {
           __videoItemsState._chewieController.pause();

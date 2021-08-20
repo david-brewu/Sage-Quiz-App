@@ -27,8 +27,7 @@ class ChangePassword extends StatelessWidget {
   //button click
   void _onChangePassword(BuildContext context) async {
     if (_formKey.currentState.validate()) {
-      //check if password is valid
-      //change Password
+    
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Row(
           children: <Widget>[

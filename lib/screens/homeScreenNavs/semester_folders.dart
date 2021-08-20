@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamie/config/config.dart';
-import 'package:gamie/reuseable/components.dart';
 import 'package:gamie/screens/homeScreenNavs/course_materials.dart';
 
 class SemesterFolders extends StatelessWidget {

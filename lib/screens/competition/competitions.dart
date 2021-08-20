@@ -45,7 +45,7 @@ Widget competionStream(User user) {
   var enrolledIds = <String>[];
   return StreamBuilder(
     stream: CloudFirestoreServices.getEnrolledStream(user),
-    //stream:  FirebaseFirestore.instance.collection('enrolments').snapshots(),
+   
     builder: (BuildContext context, AsyncSnapshot snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting)
         return Scaffold(
@@ -71,7 +71,7 @@ Widget competionStream(User user) {
       }
       return StreamBuilder(
           stream: CloudFirestoreServices.getCompetitionStream(),
-          //stream: FirebaseFirestore.instance.collection("competitions").snapshots(),
+         
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Scaffold(

@@ -47,7 +47,7 @@ class PhoneNumberEntryScreen extends StatelessWidget {
                       height: 30,
                       child: Row(
                         children: <Widget>[
-                          // Container(width: 180, height: 20, child: Container()),
+                        
                           SizedBox(width: 5),
                           Expanded(
                             child: PhoneNumberInput(),

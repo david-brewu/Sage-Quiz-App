@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamie/Providers/network_provider.dart';
-import 'package:gamie/config/config.dart';
 import 'package:gamie/reuseable/empty_items.dart';
 import 'package:gamie/reuseable/network_error_widget.dart';
 import 'package:gamie/reuseable/no_connectivity_widget.dart';
 import 'package:gamie/screens/homeScreenNavs/pdfreader.dart';
 import 'package:gamie/screens/homeScreenNavs/v_player.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
-import '../../models/course_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 _LectureNotesState _lectureNotes;
@@ -18,7 +15,7 @@ class LectureNotes extends StatefulWidget {
   final String courseName;
   final String materialType;
   final String semester;
-  //final String title;
+  
   final String imagePath;
   LectureNotes(
       {this.courseName, this.materialType, this.semester, this.imagePath});
@@ -101,7 +98,7 @@ Future<List<Reference>> listExample(
 }
 
 class BuildReferenceList extends StatelessWidget {
-  //final CourseModel dataModel;
+
   final Reference reference;
   final String imagePath;
 

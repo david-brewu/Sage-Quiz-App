@@ -188,13 +188,6 @@ class _AddRemoveCourseState extends State<AddRemoveCourse> {
   }
 }
 
-/* class GoToRegistration extends StatelessWidget{
-  @override 
-  Widget build(BuildContext context){return MaterialApp(home: MultiProvider(providers: [ChangeNotifierProvider(
-          create: (_) => NetworkProvider(this.widget.connection),
-        ),],))}
-} */
-
 class CourseResgistration extends StatefulWidget {
   static final String routeName = 'CourseRegistration';
   @override
@@ -228,7 +221,6 @@ class _ResgistrationState extends State<CourseResgistration> {
   }
 
   Widget build(BuildContext context) {
-    // User user = FirebaseAuth.instance.currentUser;
     final networkProvider = Provider.of<NetworkProvider>(context);
     User user = FirebaseAuth.instance.currentUser;
     return Scaffold(
@@ -243,7 +235,6 @@ Widget schooCourseStream(User user) {
   List myList;
   return StreamBuilder(
       stream: CloudFirestoreServices.schoolCourses(),
-      //stream: FirebaseFirestore.instance.collection("competitions").snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -259,8 +250,6 @@ Widget schooCourseStream(User user) {
         if (snapshot.hasData) {
           List<DocumentSnapshot> data = snapshot.data.docs;
           myList = data;
-          //print(data.length);
-          //print(data.toString());
 
           if (data.length == 0)
             return Center(
@@ -289,7 +278,6 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    final List schoolCourselist = widget.schoolData.courses;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -354,7 +342,6 @@ class _RegisterState extends State<Register> {
                                                   .widget.courseList
                                             });
 
-                                            //Navigator.of(context).pop();
                                             Navigator.of(context).pop();
                                             _UserCoursesState();
 

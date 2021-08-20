@@ -1,14 +1,9 @@
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamie/Providers/authUserProvider.dart';
 import 'package:gamie/Providers/first_lunch.dart';
 import 'package:gamie/config/config.dart';
-import 'package:gamie/models/user_model.dart';
 import 'package:gamie/screens/auth/application_root.dart';
 import 'package:gamie/screens/auth/emailConfirmScreen.dart';
 import 'package:gamie/screens/auth/gettingStartedScreen.dart';
@@ -16,10 +11,8 @@ import 'package:gamie/screens/homeScreen.dart';
 import 'package:gamie/screens/auth/login.dart';
 import 'package:gamie/screens/Knowledge/pascoPage.dart';
 import 'package:gamie/screens/profilePageWidgets/personalInfo.dart';
-import 'package:gamie/screens/user/profilePageScreen.dart';
 import 'package:gamie/payments/userPaymentScreen.dart';
 import 'package:gamie/screens/user/user_course_management.dart';
-import 'package:gamie/services/cloud_firestore_services.dart';
 import 'package:gamie/services/messaging_services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -105,16 +98,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     await FirstLaunchSharedPreference.setLaunch(true);
   }
 
-  /* Widget _buildFullscrenImage() {
-    return Image.asset(
-      'assets/images/invite-img.png',
-      fit: BoxFit.cover,
-      height: double.infinity,
-      width: double.infinity,
-      alignment: Alignment.center,
-    );
-  } */
-
   Widget _buildImage(String assetName, [double width = 350]) {
     return Image.asset(assetName, width: width);
   }
@@ -140,7 +123,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 16, right: 16),
-            // child: _buildImage('assets/images/welcome.png', 100),
           ),
         ),
       ),
@@ -187,7 +169,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       ],
 
       onDone: () => _onIntroEnd(context),
-      //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+
       showSkipButton: true,
       skipFlex: 0,
       nextFlex: 0,
@@ -249,41 +231,13 @@ class _AppState extends State<App> {
     super.initState();
   }
 
-  /* Widget userStream(String id, GlobalKey<FormState> formKey, String docID) {
-    return StreamBuilder(
-        stream: CloudFirestoreServices.userStream(id),
-        //stream: FirebaseFirestore.instance.collection("competitions").snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            print('no connection');
-          } else if (snapshot.hasError) {
-            print('snap has an error');
-          }
-          if (snapshot.hasData) {
-            List<DocumentSnapshot> data = snapshot.data.docs;
-            print(data.length);
-            print(data.toString());
-
-            if (data.length == 0) print('no data');
-            return saveID(
-              UserDataModel.fromMap(data[0], 0),
-            );
-          } else
-            return Text('has not data');
-        });
-  } */
-
   @override
   Widget build(BuildContext context) {
-    //setState(() {});
     final pushNotificationService =
         PushNotificationService(App._firebaseMessaging);
     if (notiStatus != false) {
       pushNotificationService.initialise();
-      //  print(notiStatus.toString() + ' status');
-    } else {
-      //  print((notiStatus.toString() + ' status'));
-    }
+    } else {}
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -308,8 +262,7 @@ class _AppState extends State<App> {
           ApplicationRoot.routeName: (context) => ApplicationRoot(),
           GettingStartedScreen.routeName: (context) => GettingStartedScreen(),
           EmailConfirmScreen.routeName: (context) => EmailConfirmScreen(),
-           HomeScreen.routeName: (context) => HomeScreen(),
-          // ProfilePage.routeName: (context) => ProfilePage(),
+          HomeScreen.routeName: (context) => HomeScreen(),
           UserPaymentScreen.routeName: (context) => UserPaymentScreen(),
           LoginScreen.routeName: (context) => LoginScreen(),
           PascoPage.routeName: (context) => PascoPage(),
