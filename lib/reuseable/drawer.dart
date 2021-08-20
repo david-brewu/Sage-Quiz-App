@@ -124,7 +124,7 @@ class CustomDrawer extends StatelessWidget {
                       onTap: () {
                         final RenderBox box = context.findRenderObject();
                         Share.share(
-                            'https://play.google.com/store/apps/details?id=com.mat.nkudu',
+                            'https://play.google.com/store/apps/details?id=com.mat.sagequiz',
                             subject: 'Check Out this Cool App',
                             sharePositionOrigin:
                                 box.localToGlobal(Offset.zero) & box.size);
