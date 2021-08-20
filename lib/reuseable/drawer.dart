@@ -53,25 +53,25 @@ class CustomDrawer extends StatelessWidget {
                 child: ListView(
                   physics: BouncingScrollPhysics(),
                   children: <Widget>[
-                    ListTile(
-                      onTap: () async {
-                        Navigator.pop(context);
-                        getUser(FirebaseAuth.instance.currentUser);
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (BuildContext context) =>
-                                    UserCourses()));
-                      },
-                      leading: Icon(
-                        Icons.remove_circle_outline,
-                        color: Colors.black,
-                      ),
-                      title: Text(
-                        "Manage Courses",
-                        style: NORMAL_BLACK_BUTTON_TEXT,
-                      ),
-                    ),
+                    // ListTile(
+                    //   onTap: () async {
+                    //     Navigator.pop(context);
+                    //     getUser(FirebaseAuth.instance.currentUser);
+                    //     Navigator.push(
+                    //         context,
+                    //         CupertinoPageRoute(
+                    //             builder: (BuildContext context) =>
+                    //                 UserCourses()));
+                    //   },
+                    //   leading: Icon(
+                    //     Icons.remove_circle_outline,
+                    //     color: Colors.black,
+                    //   ),
+                    //   title: Text(
+                    //     "Manage Courses",
+                    //     style: NORMAL_BLACK_BUTTON_TEXT,
+                    //   ),
+                    // ),
                     ListTile(
                       onTap: () async {
                         getUser(FirebaseAuth.instance.currentUser);
@@ -99,27 +99,27 @@ class CustomDrawer extends StatelessWidget {
                     Divider(
                       height: 0,
                     ),
-                    ListTile(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (BuildContext context) =>
-                                    PascoPage()));
-                      },
-                      leading: Icon(
-                        FontAwesome.book,
-                        color: Colors.black,
-                      ),
-                      title: Text(
-                        "Past Questions",
-                        style: NORMAL_BLACK_BUTTON_TEXT,
-                      ),
-                    ),
-                    Divider(
-                      height: 0,
-                    ),
+                    // ListTile(
+                    //   onTap: () {
+                    //     Navigator.pop(context);
+                    //     Navigator.push(
+                    //         context,
+                    //         CupertinoPageRoute(
+                    //             builder: (BuildContext context) =>
+                    //                 PascoPage()));
+                    //   },
+                    //   leading: Icon(
+                    //     FontAwesome.book,
+                    //     color: Colors.black,
+                    //   ),
+                    //   title: Text(
+                    //     "Past Questions",
+                    //     style: NORMAL_BLACK_BUTTON_TEXT,
+                    //   ),
+                    // ),
+                    // Divider(
+                    //   height: 0,
+                    // ),
                     ListTile(
                       onTap: () {
                         final RenderBox box = context.findRenderObject();

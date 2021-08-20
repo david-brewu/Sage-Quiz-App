@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     DashboardNav(),
     EnrolledNav(),
     HistoryNav(),
-    LearningNav(),
+   // LearningNav(),
   ];
 
   Widget _buildHome(int index) => (_navbody[index]);

@@ -36,13 +36,13 @@ class BottomNav extends StatelessWidget {
             // ignore: deprecated_member_use
             title: Text("History"),
           ),
-          BottomNavigationBarItem(
-            icon: provider.index == 3
-                ? _activeNav(Octicons.book)
-                : Icon(Octicons.book),
-            // ignore: deprecated_member_use
-            title: Text("Learn"),
-          )
+          // BottomNavigationBarItem(
+          //   icon: provider.index == 3
+          //       ? _activeNav(Octicons.book)
+          //       : Icon(Octicons.book),
+          //   // ignore: deprecated_member_use
+          //   title: Text("Learn"),
+          // )
         ]);
   }
 }
